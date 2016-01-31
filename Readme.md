@@ -8,10 +8,53 @@ library for Java. It allows Java objects to be saved ("serialized") to
 some data format, and to be reconstructed ("deserialized") from that saved
 data at a later time.
 
-By default, Azrael allows objects to be serialized to
+By default, Azrael comes with a serializer for
 [JSON](https://en.wikipedia.org/wiki/JSON), but its
 API allows you to easily implement serialization to your own custom data
 format.
+
+How it works
+------------
+
+Suppose you have the following class:
+
+    class MyClass {
+      int x = 0;
+      String s = "";
+      List<Float> f = new LinkedList<Float>();
+      
+      public add(Float x) {
+        f.add(x);
+      }
+    }
+
+You would like to serialize the state of objects of class `MyClass` to
+JSON. With Azrael, you can do the following:
+
+    // Create an object and fill with values
+    MyClass my_obj = new MyClass();
+    my_obj.x = 1; my_obj.s = "abc"; my_obj.add(1.5);
+    
+    // Create a serializer for JSON
+    JsonSerializer ser = new JsonSerializer();
+    JsonElement e = ser.serialize(my_obj);
+
+The contents of `my_obj` are saved in a JSON element, which you can save
+somewhere as a string using its `toString()` method.
+
+Now suppose you want to reconstruct an object of `MyClass` with the exact
+data that was contained in the saved JSON. You first reconstruct the JSON
+element `e` (from a String, etc.), and then call the `deserialize()` method:
+
+    MyClass my_new_obj = (MyClass) ser.deserializeAs(e, MyClass.class);
+
+You could check for yourself that the member fields of `my_obj` and
+`my_new_obj` are identical. Note that you don't need to use the same
+instance serializer for both operations, or be in the same program when
+saving and loading.
+
+This, in a nutshell, is how Azrael works (and how other serialization
+libraries work too, although with some peculiarities).
 
 Dependencies
 ------------
