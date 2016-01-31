@@ -5,7 +5,8 @@ Azrael: a universal serialization library for Java
 
 Azrael is a [serialization](https://en.wikipedia.org/wiki/Serialization)
 library for Java. It allows Java objects to be saved ("serialized") to
-some data format, and to be reconstructed ("deserialized")
+some data format, and to be reconstructed ("deserialized") from that saved
+data at a later time.
 
 By default, Azrael allows objects to be serialized to
 [JSON](https://en.wikipedia.org/wiki/JSON), but its
@@ -25,14 +26,15 @@ Features
 Azrael was developed out of insatisfaction with existing (JSON)
 serialization libraries, mostly
 [Java Google Gson](https://code.google.com/p/google-gson/) (Gson) and
-[Genson](http://owlike.github.io/genson/).
+[Genson](http://owlike.github.io/genson/). Here are a couple of features
+of Azrael for which other libraries didn't fit the author's needs.
 
 ### Serialize list, maps and sets
 
 In other serialization libraries, "collections require special treatment
 since the Collections are of generic type and the type information is lost
 while converting to JSON due to Java type erasure" (says the
-[Gson documentation](http://www.studytrails.com/java/json/java-google-json-introduction.jsp).
+[Gson documentation](http://www.studytrails.com/java/json/java-google-json-introduction.jsp)).
 
 **Not so with Azrael**, which *does* takes care of serializing the exact
 class of each element in a collection (list, map, set). Hence you can write,
