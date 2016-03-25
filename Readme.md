@@ -59,9 +59,8 @@ libraries work too, although with some peculiarities).
 Dependencies
 ------------
 
-The package `ca.uqac.lif.cornipickle.json` should be in your classpath to
-use JSON serialization. (It shall be bundled with Azrael in the near
-future.)
+The library [json-lif](https://github.com/liflab/json-lif) should be in your
+classpath to use JSON serialization.
 
 Features
 --------

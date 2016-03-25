@@ -21,8 +21,8 @@ package ca.uqac.lif.azrael.json;
 
 import ca.uqac.lif.azrael.BooleanHandler;
 import ca.uqac.lif.azrael.Serializer;
-import ca.uqac.lif.cornipickle.json.JsonElement;
-import ca.uqac.lif.cornipickle.json.JsonString;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonString;
 
 class JsonBooleanHandler extends BooleanHandler<JsonElement>
 {

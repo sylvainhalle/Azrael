@@ -26,8 +26,8 @@ import java.util.Map;
 import ca.uqac.lif.azrael.ObjectHandler;
 import ca.uqac.lif.azrael.Serializer;
 import ca.uqac.lif.azrael.SerializerException;
-import ca.uqac.lif.cornipickle.json.JsonElement;
-import ca.uqac.lif.cornipickle.json.JsonMap;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonMap;
 
 public class JsonObjectHandler extends ObjectHandler<JsonElement>
 {

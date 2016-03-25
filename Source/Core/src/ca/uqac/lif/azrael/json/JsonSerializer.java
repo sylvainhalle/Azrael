@@ -24,9 +24,9 @@ import ca.uqac.lif.azrael.NumberHandler;
 import ca.uqac.lif.azrael.ObjectHandler;
 import ca.uqac.lif.azrael.Serializer;
 import ca.uqac.lif.azrael.StringHandler;
-import ca.uqac.lif.cornipickle.json.JsonElement;
-import ca.uqac.lif.cornipickle.json.JsonMap;
-import ca.uqac.lif.cornipickle.json.JsonString;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonMap;
+import ca.uqac.lif.json.JsonString;
 
 public class JsonSerializer extends Serializer<JsonElement>
 {

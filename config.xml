@@ -44,5 +44,15 @@
     Write JAR dependencies here.
   -->
   <dependencies>
+    <dependency>
+      <!--
+      json-lif. Used to parse JSON messages
+      -->
+      <name>json-lif</name>
+      <classname>ca.uqac.lif.json.JsonMain</classname>
+      <files>
+        <zip>https://github.com/liflab/json-lif/releases/download/v1.0/json-lif-1.0.zip</zip>
+      </files>
+    </dependency>
   </dependencies>
 </build>

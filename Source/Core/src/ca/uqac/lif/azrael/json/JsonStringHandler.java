@@ -21,8 +21,8 @@ package ca.uqac.lif.azrael.json;
 
 import ca.uqac.lif.azrael.Serializer;
 import ca.uqac.lif.azrael.StringHandler;
-import ca.uqac.lif.cornipickle.json.JsonElement;
-import ca.uqac.lif.cornipickle.json.JsonString;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonString;
 
 /**
  * A JSON handler for string data

@@ -21,8 +21,8 @@ package ca.uqac.lif.azrael.json;
 
 import ca.uqac.lif.azrael.NumberHandler;
 import ca.uqac.lif.azrael.Serializer;
-import ca.uqac.lif.cornipickle.json.JsonElement;
-import ca.uqac.lif.cornipickle.json.JsonNumber;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonNumber;
 
 public class JsonNumberHandler extends NumberHandler<JsonElement>
 {
