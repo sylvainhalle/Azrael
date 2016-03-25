@@ -12,5 +12,4 @@ public class ClassY implements InterfaceZ
   {
     x = i;
   }
-
 }
