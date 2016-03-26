@@ -26,7 +26,7 @@ package ca.uqac.lif.azrael;
  */
 public abstract class BooleanHandler<T> extends PrimitiveHandler<T>
 {
-  public BooleanHandler(Serializer<T> s)
+  public BooleanHandler(GenericSerializer<T> s)
   {
     super(s);
   }

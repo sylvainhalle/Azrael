@@ -24,7 +24,7 @@ import java.util.List;
 
 public abstract class ListHandler<T> extends Handler<T>
 {
-	public ListHandler(Serializer<T> s)
+	public ListHandler(GenericSerializer<T> s)
 	{
 		super(s);
 	}

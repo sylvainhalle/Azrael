@@ -19,7 +19,7 @@
  */
 package ca.uqac.lif.azrael.json;
 
-import ca.uqac.lif.azrael.Serializer;
+import ca.uqac.lif.azrael.GenericSerializer;
 import ca.uqac.lif.azrael.StringHandler;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonString;
@@ -31,7 +31,7 @@ import ca.uqac.lif.json.JsonString;
  */
 class JsonStringHandler extends StringHandler<JsonElement>
 {
-  public JsonStringHandler(Serializer<JsonElement> s)
+  public JsonStringHandler(GenericSerializer<JsonElement> s)
   {
     super(s);
   }

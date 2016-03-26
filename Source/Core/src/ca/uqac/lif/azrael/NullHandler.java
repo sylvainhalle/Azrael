@@ -26,7 +26,7 @@ package ca.uqac.lif.azrael;
  */
 public abstract class NullHandler<T> extends Handler<T>
 {
-	public NullHandler(Serializer<T> s)
+	public NullHandler(GenericSerializer<T> s)
 	{
 		super(s);
 	}

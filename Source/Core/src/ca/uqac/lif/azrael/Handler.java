@@ -24,9 +24,9 @@ public abstract class Handler<T>
 	/**
 	 * The serializer this handler is attached to
 	 */
-	protected final Serializer<T> m_serializer;
+	protected final GenericSerializer<T> m_serializer;
 
-	public Handler(Serializer<T> s)
+	public Handler(GenericSerializer<T> s)
 	{
 		super();
 		m_serializer = s;

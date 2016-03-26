@@ -21,7 +21,7 @@ package ca.uqac.lif.azrael;
 
 public abstract class NumberHandler<T> extends PrimitiveHandler<T>
 {
-  public NumberHandler(Serializer<T> s)
+  public NumberHandler(GenericSerializer<T> s)
   {
     super(s);
   }

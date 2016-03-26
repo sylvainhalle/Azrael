@@ -26,7 +26,7 @@ package ca.uqac.lif.azrael;
  */
 public abstract class EnumHandler<T> extends PrimitiveHandler<T>
 {
-  public EnumHandler(Serializer<T> s)
+  public EnumHandler(GenericSerializer<T> s)
   {
     super(s);
   }

@@ -24,26 +24,33 @@ import ca.uqac.lif.azrael.EnumHandler;
 import ca.uqac.lif.azrael.NullHandler;
 import ca.uqac.lif.azrael.NumberHandler;
 import ca.uqac.lif.azrael.ObjectHandler;
-import ca.uqac.lif.azrael.Serializer;
+import ca.uqac.lif.azrael.GenericSerializer;
 import ca.uqac.lif.azrael.StringHandler;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonMap;
 import ca.uqac.lif.json.JsonNull;
 import ca.uqac.lif.json.JsonString;
 
-public class JsonSerializer extends Serializer<JsonElement>
+public class JsonSerializer extends GenericSerializer<JsonElement>
 {
 	/**
 	 * The special attribute name added to the serialization to record
 	 * the precise class name of the serialized object
 	 */
-	protected static final String s_classAttribute = "!class";
+	protected static transient final String s_classAttribute = "!class";
 
 	/**
 	 * The special attribute name added to the serialization to
 	 * enclose the wrapped object
 	 */
-	protected static final String s_objectAttribute = "!contents";
+	protected static transient final String s_objectAttribute = "!contents";
+	
+	public JsonSerializer()
+	{
+		super();
+		addObjectHandler(0, new JsonListHandler(this));
+		addObjectHandler(0, new JsonMapHandler(this));
+	}
 
 	@Override
 	public JsonElement wrapTypeInfo(Object o, JsonElement e)
@@ -106,7 +113,7 @@ public class JsonSerializer extends Serializer<JsonElement>
 	}
 
 	@Override
-	public ca.uqac.lif.azrael.Serializer.TypeInfo<JsonElement> getTypeInfo(JsonElement in, Class<?> target_class) throws ClassNotFoundException
+	public ca.uqac.lif.azrael.GenericSerializer.TypeInfo<JsonElement> getTypeInfo(JsonElement in, Class<?> target_class) throws ClassNotFoundException
 	{
 		TypeInfo<JsonElement> info = new TypeInfo<JsonElement>();
 		info.e = in;

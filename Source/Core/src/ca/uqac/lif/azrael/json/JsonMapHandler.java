@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import ca.uqac.lif.azrael.MapHandler;
-import ca.uqac.lif.azrael.Serializer;
+import ca.uqac.lif.azrael.GenericSerializer;
 import ca.uqac.lif.azrael.SerializerException;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonList;
@@ -34,14 +34,14 @@ public class JsonMapHandler extends MapHandler<JsonElement>
 	/**
 	 * The special attribute used to represent the key in the JSON element
 	 */
-	protected static String s_keyAttribute = "!key";
+	protected static final transient String s_keyAttribute = "!key";
 	
 	/**
 	 * The special attribute used to represent the value in the JSON element
 	 */
-	protected static String s_valueAttribute = "!value";
+	protected static final transient String s_valueAttribute = "!value";
 	
-	public JsonMapHandler(Serializer<JsonElement> s)
+	public JsonMapHandler(GenericSerializer<JsonElement> s)
 	{
 		super(s);
 	}

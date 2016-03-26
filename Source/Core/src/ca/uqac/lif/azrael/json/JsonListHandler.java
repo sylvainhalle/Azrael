@@ -23,14 +23,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import ca.uqac.lif.azrael.ListHandler;
-import ca.uqac.lif.azrael.Serializer;
+import ca.uqac.lif.azrael.GenericSerializer;
 import ca.uqac.lif.azrael.SerializerException;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonList;
 
 public class JsonListHandler extends ListHandler<JsonElement>
 {
-	public JsonListHandler(Serializer<JsonElement> s)
+	public JsonListHandler(GenericSerializer<JsonElement> s)
 	{
 		super(s);
 	}

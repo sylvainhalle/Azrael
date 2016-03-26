@@ -25,7 +25,7 @@ import java.util.Set;
 
 public abstract class MapHandler<T> extends Handler<T>
 {
-	public MapHandler(Serializer<T> s)
+	public MapHandler(GenericSerializer<T> s)
 	{
 		super(s);
 	}

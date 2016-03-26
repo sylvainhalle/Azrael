@@ -20,13 +20,13 @@
 package ca.uqac.lif.azrael.json;
 
 import ca.uqac.lif.azrael.NullHandler;
-import ca.uqac.lif.azrael.Serializer;
+import ca.uqac.lif.azrael.GenericSerializer;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonNull;
 
 class JsonNullHandler extends NullHandler<JsonElement>
 {
-  public JsonNullHandler(Serializer<JsonElement> s)
+	public JsonNullHandler(GenericSerializer<JsonElement> s)
   {
     super(s);
   }

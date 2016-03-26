@@ -20,13 +20,13 @@
 package ca.uqac.lif.azrael.json;
 
 import ca.uqac.lif.azrael.EnumHandler;
-import ca.uqac.lif.azrael.Serializer;
+import ca.uqac.lif.azrael.GenericSerializer;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonString;
 
 class JsonEnumHandler extends EnumHandler<JsonElement>
 {
-  public JsonEnumHandler(Serializer<JsonElement> s)
+	public JsonEnumHandler(GenericSerializer<JsonElement> s)
   {
     super(s);
   }

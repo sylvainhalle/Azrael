@@ -26,7 +26,7 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
-import ca.uqac.lif.azrael.Serializer.TypeInfo;
+import ca.uqac.lif.azrael.GenericSerializer.TypeInfo;
 
 /**
  * Handler for a <em>compound</em> object, i.e. an object that contains
@@ -38,7 +38,7 @@ import ca.uqac.lif.azrael.Serializer.TypeInfo;
 public abstract class ObjectHandler<T> extends Handler<T>
 {
 
-	public ObjectHandler(Serializer<T> s)
+	public ObjectHandler(GenericSerializer<T> s)
 	{
 		super(s);
 	}
@@ -53,7 +53,7 @@ public abstract class ObjectHandler<T> extends Handler<T>
 		}
 		// We get here if the object is not primitive
 		Map<String,T> contents = new HashMap<String,T>();
-		for (Field field : Serializer.getAllFields(o.getClass()))
+		for (Field field : GenericSerializer.getAllFields(o.getClass()))
 		{
 			// Is this field declared as transient?
 			if (Modifier.isTransient(field.getModifiers()))
@@ -209,7 +209,7 @@ public abstract class ObjectHandler<T> extends Handler<T>
 			try
 			{
 				// Get the field associated with the map key and its declared type
-				Field fld = Serializer.getFromAllFields(attribute, clazz);
+				Field fld = GenericSerializer.getFromAllFields(attribute, clazz);
 				fld.setAccessible(true);
 				Object value_o = contents.get(attribute);
 				if (fld.getType().isEnum())

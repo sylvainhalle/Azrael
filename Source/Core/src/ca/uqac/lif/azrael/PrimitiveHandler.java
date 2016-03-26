@@ -22,7 +22,7 @@ package ca.uqac.lif.azrael;
 public abstract class PrimitiveHandler<T> extends Handler<T>
 {
 
-  public PrimitiveHandler(Serializer<T> s)
+  public PrimitiveHandler(GenericSerializer<T> s)
   {
     super(s);
   }

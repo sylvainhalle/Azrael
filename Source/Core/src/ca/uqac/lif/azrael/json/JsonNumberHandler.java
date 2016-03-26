@@ -20,39 +20,55 @@
 package ca.uqac.lif.azrael.json;
 
 import ca.uqac.lif.azrael.NumberHandler;
-import ca.uqac.lif.azrael.Serializer;
+import ca.uqac.lif.azrael.GenericSerializer;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonNumber;
 
 public class JsonNumberHandler extends NumberHandler<JsonElement>
 {
-  public JsonNumberHandler(Serializer<JsonElement> s)
-  {
-    super(s);
-  }
-  
-  @Override
-  public JsonNumber serializeAs(Object o, Class<?> clazz)
-  {
-    if (o == null)
-    {
-      return null;
-    }
-    if (o instanceof Number)
-    {
-      return new JsonNumber((Number) o);
-    }
-    return null;
-  }
-  
-  @Override
-  public Number deserializeAs(JsonElement e, Class<?> clazz)
-  {
-    if (e != null && e instanceof JsonNumber)
-    {
-      return ((JsonNumber) e).numberValue();
-    }
-    return null;
-  }
+	public JsonNumberHandler(GenericSerializer<JsonElement> s)
+	{
+		super(s);
+	}
+
+	@Override
+	public JsonNumber serializeAs(Object o, Class<?> clazz)
+	{
+		if (o == null)
+		{
+			return null;
+		}
+		if (o instanceof Number)
+		{
+			return new JsonNumber((Number) o);
+		}
+		return null;
+	}
+
+	@Override
+	public Number deserializeAs(JsonElement e, Class<?> clazz)
+	{
+		if (e != null && e instanceof JsonNumber)
+		{
+			if (clazz.equals(Integer.class))
+			{
+				return ((JsonNumber) e).numberValue().intValue();
+			}
+			else if (clazz.equals(Long.class))
+			{
+				return ((JsonNumber) e).numberValue().longValue();
+			}
+			else if (clazz.equals(Float.class))
+			{
+				return ((JsonNumber) e).numberValue().floatValue();
+			}
+			else if (clazz.equals(Double.class))
+			{
+				return ((JsonNumber) e).numberValue().doubleValue();
+			}
+			return ((JsonNumber) e).numberValue();
+		}
+		return null;
+	}
 
 }

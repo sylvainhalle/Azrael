@@ -26,7 +26,7 @@ package ca.uqac.lif.azrael;
  */
 public abstract class StringHandler<T> extends PrimitiveHandler<T>
 {
-  public StringHandler(Serializer<T> s)
+  public StringHandler(GenericSerializer<T> s)
   {
     super(s);
   }

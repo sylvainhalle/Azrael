@@ -24,64 +24,64 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ca.uqac.lif.azrael.ObjectHandler;
-import ca.uqac.lif.azrael.Serializer;
+import ca.uqac.lif.azrael.GenericSerializer;
 import ca.uqac.lif.azrael.SerializerException;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonMap;
 
 public class JsonObjectHandler extends ObjectHandler<JsonElement>
 {
-  public JsonObjectHandler(Serializer<JsonElement> s)
-  {
-    super(s);
-  }
+	public JsonObjectHandler(GenericSerializer<JsonElement> s)
+	{
+		super(s);
+	}
 
-  @Override
-  public JsonElement serializeObject(Object o, Map<String, JsonElement> contents)
-  {
-    JsonMap map = new JsonMap();
-    for (String key : contents.keySet())
-    {
-      JsonElement value = contents.get(key);
-      map.put(key, value);
-    }
-    return map;
-  }
+	@Override
+	public JsonElement serializeObject(Object o, Map<String, JsonElement> contents)
+	{
+		JsonMap map = new JsonMap();
+		for (String key : contents.keySet())
+		{
+			JsonElement value = contents.get(key);
+			map.put(key, value);
+		}
+		return map;
+	}
 
-  @Override
-  public Map<String, Object> deserializeContents(JsonElement e,
-      Class<?> clazz) throws SerializerException
-  {
-    Map<String,Object> o_map = new HashMap<String,Object>();
-    if (e == null || !(e instanceof JsonMap))
-    {
-      return o_map;
-    }
-    JsonMap map = (JsonMap) e;
-    for (String attribute : map.keySet())
-    {
-      try
-      {
-        // Get the field associated with the map key and its declared type
-        Field fld = Serializer.getFromAllFields(attribute, clazz);
-        fld.setAccessible(true);
-        Class<?> field_type = fld.getType();
-        // Get the map value, deserialize it and set the field to the result
-        JsonElement value = map.get(attribute);
-        Object value_o = m_serializer.deserializeAs(value, field_type);
-        o_map.put(attribute, value_o);
-      }
-      catch (NoSuchFieldException ex)
-      {
-        throw new SerializerException(ex);
-      }
-    }
-    return o_map;
-  }
+	@Override
+	public Map<String, Object> deserializeContents(JsonElement e,
+			Class<?> clazz) throws SerializerException
+			{
+		Map<String,Object> o_map = new HashMap<String,Object>();
+		if (e == null || !(e instanceof JsonMap))
+		{
+			return o_map;
+		}
+		JsonMap map = (JsonMap) e;
+		for (String attribute : map.keySet())
+		{
+			try
+			{
+				// Get the field associated with the map key and its declared type
+				Field fld = GenericSerializer.getFromAllFields(attribute, clazz);
+				fld.setAccessible(true);
+				Class<?> field_type = fld.getType();
+				// Get the map value, deserialize it and set the field to the result
+				JsonElement value = map.get(attribute);
+				Object value_o = m_serializer.deserializeAs(value, field_type);
+				o_map.put(attribute, value_o);
+			}
+			catch (NoSuchFieldException ex)
+			{
+				throw new SerializerException(ex);
+			}
+		}
+		return o_map;
+			}
 
-  @Override
-  public boolean appliesTo(Class<?> clazz)
-  {
-    return true;
-  }
+	@Override
+	public boolean appliesTo(Class<?> clazz)
+	{
+		return true;
+	}
 }
