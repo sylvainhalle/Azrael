@@ -136,6 +136,24 @@ override them in a different way to produce the output you wish. (As a
 matter of fact, the code specific to JSON serialization is a mere 350 lines
 long.)
 
+Specifying class loaders
+------------------------
+
+If you use Azrael as a library within your own project, it cannot
+instantiate objects outside of the basic Java classes out of the box.
+You need to give one or more *class loaders* that will enable it to
+create instances of your objects.
+
+Suppose for example that you have a package called `my.package`; to
+help Azrael create objects from this package, do the following:
+
+    my_serializer.addClassLoader(my.package.MyClass.class.getClassLoader());
+
+where `MyClass` is any of the classes of `my.package`. This should normally
+be enough for all classes of that package. You can add more than one
+class loader to Azrael; when it attempts to instantiate an object, it tries
+them all until one of them works.
+
 About the author                                                   {#about}
 ----------------
 

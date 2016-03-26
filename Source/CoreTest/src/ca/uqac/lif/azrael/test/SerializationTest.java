@@ -175,6 +175,7 @@ public class SerializationTest
 	@Test
 	public void testNoInstance1() throws SerializerException
 	{
+		m_serializer.addClassLoader(InterfaceZ.class.getClassLoader());
 		InterfaceZ obj_a = new ClassY(1);
 		JsonElement e = m_serializer.serializeAs(obj_a, InterfaceZ.class);
 		assertNotNull(e);

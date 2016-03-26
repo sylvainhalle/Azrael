@@ -22,9 +22,11 @@ package ca.uqac.lif.azrael;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Serializes Java objects into elements of some type T
@@ -32,12 +34,13 @@ import java.util.List;
  *
  * @param <T> The type to serialize
  */
-public abstract class GenericSerializer<T>
+public abstract class GenericSerializer<T> implements Serializer<T>
 {
 	protected List<PrimitiveHandler<T>> m_primitiveHandlers;
 
 	protected List<Handler<T>> m_compoundHandlers;
-
+	
+	protected Set<ClassLoader> m_classLoaders;
 
 	public GenericSerializer()
 	{
@@ -48,6 +51,7 @@ public abstract class GenericSerializer<T>
 		m_primitiveHandlers.add(getNumberHandler());
 		m_primitiveHandlers.add(getBooleanHandler());
 		m_primitiveHandlers.add(getEnumHandler());
+		m_classLoaders = new HashSet<ClassLoader>();
 	}
 
 	public GenericSerializer<T> addPrimitiveHandler(int position, PrimitiveHandler<T> h)
@@ -62,6 +66,56 @@ public abstract class GenericSerializer<T>
 		}
 		m_primitiveHandlers.add(position, h);
 		return this;
+	}
+	
+	/**
+	 * Adds a new class loader used to create new class instances 
+	 * @param cl The class loader
+	 */
+	public void addClassLoader(ClassLoader cl)
+	{
+		m_classLoaders.add(cl);
+	}
+	
+	/**
+	 * Attempts to return the class of given name, by going through all
+	 * the class loaders until it is found.
+	 * @param class_name The name of the class
+	 * @return The class if found, null if no class loader could locate it
+	 */
+	protected Class<?> findClass(String class_name) throws ClassNotFoundException
+	{
+		Class<?> candidate = null;
+		try
+		{
+			// Try first with the bootstrap class loader
+			candidate = Class.forName(class_name, true, null);
+		}
+		catch (ClassNotFoundException e)
+		{
+			// Do nothing
+		}
+		for (ClassLoader cl : m_classLoaders)
+		{
+			// Go through all other class loaders, if any
+			if (candidate != null)
+			{
+				break;
+			}
+			try
+			{
+				candidate = Class.forName(class_name, true, cl);
+			} 
+			catch (ClassNotFoundException e)
+			{
+				// Do nothing
+			}
+		}
+		if (candidate == null)
+		{
+			throw new ClassNotFoundException("Class " + class_name + " not found");
+		}
+		return candidate;
 	}
 
 	public GenericSerializer<T> addObjectHandler(int position, Handler<T> h)
@@ -92,7 +146,7 @@ public abstract class GenericSerializer<T>
 	/**
 	 * Serializes an object into an element of type T
 	 * @param o The object to serialize
-	 * @param def The definition of the type
+	 * @param clazz The definition of the type
 	 * @return A serialized object of type T
 	 * @throws SerializerException If something goes wrong
 	 */
@@ -105,7 +159,6 @@ public abstract class GenericSerializer<T>
 		}
 		Class<?> o_class = GenericSerializer.getWrapperClass(o.getClass());
 		clazz = getWrapperClass(clazz);
-		System.out.println("Class: " + o_class + " as " + clazz);
 		// Do we need to wrap type info?
 		if (!o_class.equals(clazz))
 		{

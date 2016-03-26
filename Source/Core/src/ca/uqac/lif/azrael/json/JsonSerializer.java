@@ -124,7 +124,7 @@ public class JsonSerializer extends GenericSerializer<JsonElement>
 			if (map.containsKey(s_classAttribute))
 			{
 				String class_name = ((JsonString) map.get(s_classAttribute)).stringValue();
-				info.clazz = Class.forName(class_name);
+				info.clazz = findClass(class_name);
 			}
 		}
 		if (in instanceof JsonNull)
