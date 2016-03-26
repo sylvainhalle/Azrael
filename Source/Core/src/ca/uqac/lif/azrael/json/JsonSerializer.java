@@ -20,12 +20,15 @@
 package ca.uqac.lif.azrael.json;
 
 import ca.uqac.lif.azrael.BooleanHandler;
+import ca.uqac.lif.azrael.EnumHandler;
+import ca.uqac.lif.azrael.NullHandler;
 import ca.uqac.lif.azrael.NumberHandler;
 import ca.uqac.lif.azrael.ObjectHandler;
 import ca.uqac.lif.azrael.Serializer;
 import ca.uqac.lif.azrael.StringHandler;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonMap;
+import ca.uqac.lif.json.JsonNull;
 import ca.uqac.lif.json.JsonString;
 
 public class JsonSerializer extends Serializer<JsonElement>
@@ -77,6 +80,12 @@ public class JsonSerializer extends Serializer<JsonElement>
 	{
 		return new JsonNumberHandler(JsonSerializer.this);
 	}
+	
+	@Override
+	protected NullHandler<JsonElement> getNullHandler() 
+	{
+		return new JsonNullHandler(JsonSerializer.this);
+	}
 
 	@Override
 	protected BooleanHandler<JsonElement> getBooleanHandler()
@@ -89,11 +98,16 @@ public class JsonSerializer extends Serializer<JsonElement>
 	{
 		return new JsonObjectHandler(JsonSerializer.this);
 	}
+	
+	@Override
+	protected EnumHandler<JsonElement> getEnumHandler()
+	{
+		return new JsonEnumHandler(JsonSerializer.this);
+	}
 
 	@Override
-	public ca.uqac.lif.azrael.Serializer.TypeInfo<JsonElement> getTypeInfo(
-			JsonElement in, Class<?> target_class) throws ClassNotFoundException
-			{
+	public ca.uqac.lif.azrael.Serializer.TypeInfo<JsonElement> getTypeInfo(JsonElement in, Class<?> target_class) throws ClassNotFoundException
+	{
 		TypeInfo<JsonElement> info = new TypeInfo<JsonElement>();
 		info.e = in;
 		info.clazz = target_class;
@@ -106,7 +120,10 @@ public class JsonSerializer extends Serializer<JsonElement>
 				info.clazz = Class.forName(class_name);
 			}
 		}
+		if (in instanceof JsonNull)
+		{
+			info.clazz = null;
+		}
 		return info;
-			}
-
+	}
 }

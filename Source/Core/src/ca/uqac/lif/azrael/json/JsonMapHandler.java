@@ -75,11 +75,12 @@ public class JsonMapHandler extends MapHandler<JsonElement>
 	@Override
 	protected Set<KeyValuePair<JsonElement,JsonElement>> getPairs(JsonElement e) throws SerializerException
 	{
-		if (e == null || !(e instanceof JsonList))
+		JsonElement je = m_serializer.unwrapTypeInfo(e);
+		if (je == null || !(je instanceof JsonList))
 		{
 			throw new SerializerException("Input must be a JSON list");
 		}
-		JsonList j_list = (JsonList) e;
+		JsonList j_list = (JsonList) je;
 		Set<KeyValuePair<JsonElement,JsonElement>> elements = new HashSet<KeyValuePair<JsonElement,JsonElement>>();
 		for (JsonElement el : j_list)
 		{

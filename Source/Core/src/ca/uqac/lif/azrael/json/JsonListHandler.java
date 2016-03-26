@@ -56,11 +56,12 @@ public class JsonListHandler extends ListHandler<JsonElement>
 	@Override
 	protected List<JsonElement> getElements(JsonElement e) throws SerializerException
 	{
-		if (e == null || !(e instanceof JsonList))
+		JsonElement je = m_serializer.unwrapTypeInfo(e);
+		if (je == null || !(je instanceof JsonList))
 		{
 			throw new SerializerException("Input must be a JSON list");
 		}
-		JsonList j_list = (JsonList) e;
+		JsonList j_list = (JsonList) je;
 		List<JsonElement> elements = new LinkedList<JsonElement>();
 		for (JsonElement el : j_list)
 		{

@@ -47,6 +47,7 @@ public abstract class Serializer<T>
 		m_primitiveHandlers.add(getStringHandler());
 		m_primitiveHandlers.add(getNumberHandler());
 		m_primitiveHandlers.add(getBooleanHandler());
+		m_primitiveHandlers.add(getEnumHandler());
 	}
 
 	public Serializer<T> addPrimitiveHandler(int position, PrimitiveHandler<T> h)
@@ -97,8 +98,14 @@ public abstract class Serializer<T>
 	 */
 	public T serializeAs(Object o, Class<?> clazz) throws SerializerException
 	{
+		if (o == null)
+		{
+			Handler<T> nh = getNullHandler();
+			return nh.serialize(o);
+		}
 		Class<?> o_class = Serializer.getWrapperClass(o.getClass());
 		clazz = getWrapperClass(clazz);
+		System.out.println("Class: " + o_class + " as " + clazz);
 		// Do we need to wrap type info?
 		if (!o_class.equals(clazz))
 		{
@@ -144,6 +151,11 @@ public abstract class Serializer<T>
 		{
 			return null;
 		}
+		if (e == null)
+		{
+			NullHandler<T> nh = getNullHandler();
+			return nh.deserializeAs(e, clazz);
+		}
 		// Does the object contain wrapped type information
 		TypeInfo<T> type_info = null;
 		try
@@ -155,6 +167,10 @@ public abstract class Serializer<T>
 			throw new SerializerException(ex);
 		}
 		assert type_info != null;
+		if (type_info.clazz == null)
+		{
+			return null;
+		}
 		// Is the object a primitive?
 		clazz = getWrapperClass(type_info.clazz);
 		for (PrimitiveHandler<T> h : m_primitiveHandlers)
@@ -190,10 +206,22 @@ public abstract class Serializer<T>
 	protected abstract NumberHandler<T> getNumberHandler();
 
 	/**
-	 * Returns a handler for serializing Booelan primitives
+	 * Returns a handler for serializing Boolean primitives
 	 * @return The handler
 	 */
 	protected abstract BooleanHandler<T> getBooleanHandler();
+	
+	/**
+	 * Returns a handler for serializing null values
+	 * @return The handler
+	 */
+	protected abstract NullHandler<T> getNullHandler();
+	
+	/**
+	 * Returns a handler for serializing enumerations
+	 * @return The handler
+	 */
+	protected abstract EnumHandler<T> getEnumHandler();
 
 	/**
 	 * Returns a handler for serializing non-primitive objects

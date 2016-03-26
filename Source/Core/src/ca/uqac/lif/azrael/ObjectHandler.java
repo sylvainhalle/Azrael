@@ -19,7 +19,9 @@
  */
 package ca.uqac.lif.azrael;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
@@ -148,9 +150,15 @@ public abstract class ObjectHandler<T> extends Handler<T>
 		}
 		// Instantiate "empty" object of the target class
 		Object o = null;
+		
 		try
 		{
-			o = clazz.newInstance();
+			Class<?>[] params = new Class[0];
+			Constructor<?> c = clazz.getDeclaredConstructor(params);
+			c.setAccessible(true);
+			Object[] args = new Object[0];
+			o = c.newInstance(args);
+			//o = clazz.newInstance();
 		} 
 		catch (InstantiationException ex)
 		{
@@ -159,13 +167,28 @@ public abstract class ObjectHandler<T> extends Handler<T>
 		catch (IllegalAccessException ex)
 		{
 			throw new SerializerException(ex);
+		} 
+		catch (NoSuchMethodException ex) 
+		{
+			throw new SerializerException(ex);
+		}
+		catch (SecurityException ex)
+		{
+			throw new SerializerException(ex);
+		} catch (IllegalArgumentException ex)
+		{
+			throw new SerializerException(ex);
+		}
+		catch (InvocationTargetException ex)
+		{
+			throw new SerializerException(ex);
 		}
 		return o;
 	}
 
 	/**
 	 * Populates an instance of an object based on its deserialized
-	 * contents. That is, this method is expected fo "fill" the object's
+	 * contents. That is, this method is expected to "fill" the object's
 	 * member fields with deserialized data.
 	 * @param o The object to use as the basis for the population
 	 * @param contents The deserialized member fields of the object
@@ -174,6 +197,7 @@ public abstract class ObjectHandler<T> extends Handler<T>
 	 *   be a different instance than the one passed through <code>o</code>.
 	 * @throws SerializerException
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected Object populateObject(Object o, Map<String,Object> contents, Class<?> clazz) throws SerializerException
 	{
 		if (o == null)
@@ -188,7 +212,18 @@ public abstract class ObjectHandler<T> extends Handler<T>
 				Field fld = Serializer.getFromAllFields(attribute, clazz);
 				fld.setAccessible(true);
 				Object value_o = contents.get(attribute);
-				fld.set(o, value_o);
+				if (fld.getType().isEnum())
+				{
+					if (!(value_o instanceof String))
+					{
+						throw new SerializerException("The deserialized value of an enum field should be a string");
+					}
+					fld.set(o, Enum.valueOf((Class<Enum>) fld.getType(), (String) value_o));
+				}
+				else
+				{
+					fld.set(o, value_o);
+				}
 			}
 			catch (NoSuchFieldException ex)
 			{
