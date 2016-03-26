@@ -121,7 +121,11 @@ public abstract class MapHandler<T> extends Handler<T>
 				out_map.put(pair.getKey(), pair.getValue());
 			}
 		} 
-		catch (InstantiationException | IllegalAccessException e)
+		catch (InstantiationException e)
+		{
+			throw new SerializerException(e);
+		}
+		catch (IllegalAccessException e)
 		{
 			throw new SerializerException(e);
 		}

@@ -117,7 +117,11 @@ public abstract class ListHandler<T> extends Handler<T>
 				out_list.add(o);
 			}
 		} 
-		catch (InstantiationException | IllegalAccessException e)
+		catch (InstantiationException e)
+		{
+			throw new SerializerException(e);
+		}
+		catch (IllegalAccessException e)
 		{
 			throw new SerializerException(e);
 		}
