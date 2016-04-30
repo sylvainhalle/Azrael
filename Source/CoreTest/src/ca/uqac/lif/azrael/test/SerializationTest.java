@@ -3,9 +3,11 @@ package ca.uqac.lif.azrael.test;
 import static org.junit.Assert.*;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +16,7 @@ import ca.uqac.lif.azrael.SerializerException;
 import ca.uqac.lif.azrael.json.JsonListHandler;
 import ca.uqac.lif.azrael.json.JsonMapHandler;
 import ca.uqac.lif.azrael.json.JsonSerializer;
+import ca.uqac.lif.azrael.json.JsonSetHandler;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonList;
 import ca.uqac.lif.json.JsonMap;
@@ -135,6 +138,24 @@ public class SerializationTest
 		Object o_des = m_serializer.deserializeAs(e, LinkedList.class);
 		assertNotNull(o_des);
 		assertTrue("Object should be an instance of LinkedList, got " + o_des.getClass().getSimpleName(), o_des instanceof LinkedList);
+	}
+	
+	@Test
+	public void testSet1() throws SerializerException
+	{
+		Set<Integer> obj_a = new HashSet<Integer>();
+		obj_a.add(1);
+		obj_a.add(2);
+		obj_a.add(3);
+		m_serializer.addObjectHandler(0, new JsonSetHandler(m_serializer));
+		JsonElement e = m_serializer.serialize(obj_a);
+		assertNotNull(e);
+		assertTrue("Serialized element should be a list, got a " + e.getClass().getSimpleName(), e instanceof JsonList);
+		JsonList e_list = (JsonList) e;
+		assertEquals(3, e_list.size());
+		Object o_des = m_serializer.deserializeAs(e, HashSet.class);
+		assertNotNull(o_des);
+		assertTrue("Object should be an instance of HashSet, got " + o_des.getClass().getSimpleName(), o_des instanceof HashSet);
 	}
 
 	@Test
