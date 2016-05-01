@@ -99,13 +99,14 @@ public abstract class SetHandler<T> extends Handler<T>
 	 * Gets a set of serialized elements from a serialized set
 	 * @param e The serialized set
 	 * @return A set of serialized elements
-	 * @throws SerializerException 
+	 * @throws SerializerException If something goes wrong
 	 */
 	protected abstract Set<T> getElements(T e) throws SerializerException;
 	
 	/**
 	 * Instantiates a deserialized set from its deserialized contents
 	 * @param contents The contents of the set
+	 * @param clazz The class of the original object
 	 * @return The set
 	 * @throws SerializerException If something goes wrong
 	 */

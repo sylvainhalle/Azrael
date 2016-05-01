@@ -95,13 +95,14 @@ public abstract class ListHandler<T> extends Handler<T>
 	 * Gets a list of serialized elements from a serialized list
 	 * @param e The serialized list
 	 * @return A list of serialized elements
-	 * @throws SerializerException 
+	 * @throws SerializerException If serialization causes an error 
 	 */
 	protected abstract List<T> getElements(T e) throws SerializerException;
 	
 	/**
 	 * Instantiates a deserialized list from its deserialized contents
 	 * @param contents The contents of the list
+	 * @param clazz The class of the original list
 	 * @return The list
 	 * @throws SerializerException If something goes wrong
 	 */

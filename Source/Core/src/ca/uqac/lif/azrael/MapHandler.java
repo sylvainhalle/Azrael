@@ -99,13 +99,14 @@ public abstract class MapHandler<T> extends Handler<T>
 	 * @param e The serialized map
 	 * @return A set of key-value pairs, each of which contains a
 	 *  serialized key and a serialized value
-	 * @throws SerializerException 
+	 * @throws SerializerException If the operation cannot be carried on 
 	 */
 	protected abstract Set<KeyValuePair<T,T>> getPairs(T e) throws SerializerException;
 	
 	/**
 	 * Instantiates a deserialized map from its deserialized contents
 	 * @param contents The contents of the map
+	 * @param clazz The class of the original object
 	 * @return The map
 	 * @throws SerializerException If something goes wrong
 	 */

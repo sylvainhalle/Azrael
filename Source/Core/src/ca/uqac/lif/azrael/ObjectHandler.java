@@ -117,7 +117,7 @@ public abstract class ObjectHandler<T> extends Handler<T>
 	 * @param e The serialized contents of the object
 	 * @param clazz The class the object should be an instance of
 	 * @return A map from member field names to deserialized objects
-	 * @throws SerializerException
+	 * @throws SerializerException If the operation cannot be carried on
 	 */
 	public abstract Map<String,Object> deserializeContents(T e, Class<?> clazz) throws SerializerException;
 
@@ -140,7 +140,7 @@ public abstract class ObjectHandler<T> extends Handler<T>
 	 * @param contents The deserialized member fields of the object
 	 * @param clazz The target class for the object
 	 * @return An instance of the object
-	 * @throws SerializerException 
+	 * @throws SerializerException If the operation cannot be carried on
 	 */
 	protected Object getInstance(Map<String,Object> contents, Class<?> clazz) throws SerializerException
 	{
@@ -195,7 +195,7 @@ public abstract class ObjectHandler<T> extends Handler<T>
 	 * @param clazz The class this object should be an instance of
 	 * @return A populated instance of the object. Note that this can
 	 *   be a different instance than the one passed through <code>o</code>.
-	 * @throws SerializerException
+	 * @throws SerializerException If the operation cannot be carried on
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected Object populateObject(Object o, Map<String,Object> contents, Class<?> clazz) throws SerializerException

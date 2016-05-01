@@ -3,7 +3,7 @@ package ca.uqac.lif.azrael;
 public class DummyMain
 {
 	/**
-	 * @param args
+	 * @param args Command-line arguments
 	 */
 	public static void main(String[] args)
 	{

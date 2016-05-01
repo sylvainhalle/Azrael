@@ -82,6 +82,7 @@ public abstract class GenericSerializer<T> implements Serializer<T>
 	 * the class loaders until it is found.
 	 * @param class_name The name of the class
 	 * @return The class if found, null if no class loader could locate it
+	 * @throws ClassNotFoundException If class cannot be found
 	 */
 	protected Class<?> findClass(String class_name) throws ClassNotFoundException
 	{
@@ -380,7 +381,7 @@ public abstract class GenericSerializer<T> implements Serializer<T>
 	 * @param in The serialized object
 	 * @param target_class The target class for this object
 	 * @return Type information
-	 * @throws ClassNotFoundException
+	 * @throws ClassNotFoundException If class cannot be found
 	 */
 	public abstract TypeInfo<T> getTypeInfo(T in, Class<?> target_class) throws ClassNotFoundException;
 
