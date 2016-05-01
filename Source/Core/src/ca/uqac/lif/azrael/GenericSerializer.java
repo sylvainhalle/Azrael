@@ -184,6 +184,7 @@ public abstract class GenericSerializer<T> implements Serializer<T>
 			if (h.appliesTo(clazz))
 			{
 				e_serialized = h.serializeAs(o, clazz);
+				break;
 			}
 		}
 		// No handler? Last resort: try the default object handler

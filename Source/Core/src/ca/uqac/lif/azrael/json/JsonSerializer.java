@@ -50,6 +50,8 @@ public class JsonSerializer extends GenericSerializer<JsonElement>
 		super();
 		addObjectHandler(0, new JsonListHandler(this));
 		addObjectHandler(0, new JsonMapHandler(this));
+		addObjectHandler(0, new JsonSetHandler(this));
+		addObjectHandler(0, new JsonElementHandler(this));
 	}
 
 	@Override

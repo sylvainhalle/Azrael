@@ -13,10 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ca.uqac.lif.azrael.SerializerException;
-import ca.uqac.lif.azrael.json.JsonListHandler;
-import ca.uqac.lif.azrael.json.JsonMapHandler;
 import ca.uqac.lif.azrael.json.JsonSerializer;
-import ca.uqac.lif.azrael.json.JsonSetHandler;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonList;
 import ca.uqac.lif.json.JsonMap;
@@ -129,7 +126,6 @@ public class SerializationTest
 		obj_a.add(1);
 		obj_a.add(2);
 		obj_a.add(3);
-		m_serializer.addObjectHandler(0, new JsonListHandler(m_serializer));
 		JsonElement e = m_serializer.serialize(obj_a);
 		assertNotNull(e);
 		assertTrue("Serialized element should be a list, got a " + e.getClass().getSimpleName(), e instanceof JsonList);
@@ -147,7 +143,6 @@ public class SerializationTest
 		obj_a.add(1);
 		obj_a.add(2);
 		obj_a.add(3);
-		m_serializer.addObjectHandler(0, new JsonSetHandler(m_serializer));
 		JsonElement e = m_serializer.serialize(obj_a);
 		assertNotNull(e);
 		assertTrue("Serialized element should be a list, got a " + e.getClass().getSimpleName(), e instanceof JsonList);
@@ -165,7 +160,6 @@ public class SerializationTest
 		obj_a.put("a", 1);
 		obj_a.put("b", 2);
 		obj_a.put("c", 3);
-		m_serializer.addObjectHandler(0, new JsonMapHandler(m_serializer));
 		JsonElement e = m_serializer.serialize(obj_a);
 		assertNotNull(e);
 		assertTrue("Serialized element should be a list, got a " + e.getClass().getSimpleName(), e instanceof JsonList);
@@ -177,6 +171,24 @@ public class SerializationTest
 		@SuppressWarnings("unchecked")
 		HashMap<String,Integer> o_map = (HashMap<String,Integer>) o_des;
 		assertEquals(1, (int) o_map.get("a"));
+	}
+	
+	@Test
+	public void testJson1() throws SerializerException
+	{
+		JsonMap jm = new JsonMap();
+		jm.put("a", 1);
+		JsonList jl = new JsonList();
+		jl.add("b");
+		jm.put("z", jl);
+		JsonElement e = m_serializer.serialize(jm);
+		assertNotNull(e);
+		assertTrue("Serialized element should be a map, got a " + e.getClass().getSimpleName(), e instanceof JsonMap);
+		Object o_des = m_serializer.deserializeAs(e, JsonMap.class);
+		assertNotNull(o_des);
+		assertTrue("Object should be an instance of JsonMap, got " + o_des.getClass().getSimpleName(), o_des instanceof JsonMap);
+		JsonMap o_map = (JsonMap) o_des;
+		assertEquals(1, (int) o_map.getNumber("a").intValue());
 	}
 
 	@Test
