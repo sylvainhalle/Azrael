@@ -28,4 +28,13 @@ public interface Serializer<T>
 	public Object deserializeAs(T e, Class<?> clazz) throws SerializerException;
 	
 	public void addClassLoader(ClassLoader cl);
+	
+	/**
+	 * Attempts to return the class of given name, by going through all
+	 * the class loaders until it is found.
+	 * @param class_name The name of the class
+	 * @return The class if found, null if no class loader could locate it
+	 * @throws ClassNotFoundException If class cannot be found
+	 */
+	public Class<?> findClass(String name) throws ClassNotFoundException;
 }

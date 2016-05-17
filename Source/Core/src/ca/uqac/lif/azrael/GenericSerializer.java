@@ -77,14 +77,8 @@ public abstract class GenericSerializer<T> implements Serializer<T>
 		m_classLoaders.add(cl);
 	}
 	
-	/**
-	 * Attempts to return the class of given name, by going through all
-	 * the class loaders until it is found.
-	 * @param class_name The name of the class
-	 * @return The class if found, null if no class loader could locate it
-	 * @throws ClassNotFoundException If class cannot be found
-	 */
-	protected Class<?> findClass(String class_name) throws ClassNotFoundException
+	@Override
+	public Class<?> findClass(String class_name) throws ClassNotFoundException
 	{
 		Class<?> candidate = null;
 		try
