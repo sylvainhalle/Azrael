@@ -49,12 +49,4 @@ public class SerializerException extends Exception
     super(message, cause);
     // TODO Auto-generated constructor stub
   }
-
-  public SerializerException(String message, Throwable cause,
-      boolean enableSuppression, boolean writableStackTrace)
-  {
-    super(message, cause, enableSuppression, writableStackTrace);
-    // TODO Auto-generated constructor stub
-  }
-
 }
