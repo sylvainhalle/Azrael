@@ -34,7 +34,7 @@ class JsonNullHandler extends NullHandler<JsonElement>
   @Override
   public JsonNull serializeAs(Object o, Class<?> clazz)
   {
-    return new JsonNull();
+    return JsonNull.instance;
   }
   
   @Override
