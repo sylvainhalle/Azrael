@@ -49,7 +49,7 @@ public abstract class GenericSerializer<T> implements Serializer<T>
 	
 	/**
 	 * Gets the version number of this library
-	 * @param The version number
+	 * @return The version number
 	 */
 	public static String getVersionString()
 	{
