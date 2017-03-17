@@ -41,7 +41,21 @@ public abstract class GenericSerializer<T> implements Serializer<T>
 	protected List<Handler<T>> m_compoundHandlers;
 	
 	protected Set<ClassLoader> m_classLoaders;
-
+	
+	/**
+	 * The version number of this library
+	 */
+	protected static String s_versionString = "0.7.1";
+	
+	/**
+	 * Gets the version number of this library
+	 * @param The version number
+	 */
+	public static String getVersionString()
+	{
+		return s_versionString;
+	}
+	
 	public GenericSerializer()
 	{
 		super();
