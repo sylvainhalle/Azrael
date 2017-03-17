@@ -154,6 +154,13 @@ be enough for all classes of that package. You can add more than one
 class loader to Azrael; when it attempts to instantiate an object, it tries
 them all until one of them works.
 
+Projects that use Azrael
+------------------------
+
+- [Cornipickle](https://github.com/liflab/cornipickle), a web testing tool
+- [LabPal](https://liflab.github.io/labpal), a library for running
+  experiments on a computer
+
 About the author                                                   {#about}
 ----------------
 
