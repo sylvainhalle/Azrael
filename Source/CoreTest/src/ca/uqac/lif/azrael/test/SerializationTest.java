@@ -137,6 +137,23 @@ public class SerializationTest
 	}
 	
 	@Test
+	public void testJsonList1() throws SerializerException
+	{
+		List<JsonElement> obj_a = new LinkedList<JsonElement>();
+		obj_a.add(new JsonString("1"));
+		obj_a.add(new JsonString("2"));
+		obj_a.add(new JsonString("3"));
+		JsonElement e = m_serializer.serialize(obj_a);
+		assertNotNull(e);
+		assertTrue("Serialized element should be a list, got a " + e.getClass().getSimpleName(), e instanceof JsonList);
+		JsonList e_list = (JsonList) e;
+		assertEquals(3, e_list.size());
+		Object o_des = m_serializer.deserializeAs(e, LinkedList.class);
+		assertNotNull(o_des);
+		assertTrue("Object should be an instance of LinkedList, got " + o_des.getClass().getSimpleName(), o_des instanceof LinkedList);
+	}
+	
+	@Test
 	public void testSet1() throws SerializerException
 	{
 		Set<Integer> obj_a = new HashSet<Integer>();

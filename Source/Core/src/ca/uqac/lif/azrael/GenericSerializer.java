@@ -36,16 +36,25 @@ import java.util.Set;
  */
 public abstract class GenericSerializer<T> implements Serializer<T>
 {
+	/**
+	 * Handlers for primitive objects
+	 */
 	protected List<PrimitiveHandler<T>> m_primitiveHandlers;
 
+	/**
+	 * Handlers for compound objects
+	 */
 	protected List<Handler<T>> m_compoundHandlers;
 	
+	/**
+	 * Additional class loaders
+	 */
 	protected Set<ClassLoader> m_classLoaders;
 	
 	/**
 	 * The version number of this library
 	 */
-	protected static String s_versionString = "0.7.1";
+	protected static String s_versionString = "0.7.2";
 	
 	/**
 	 * Gets the version number of this library
@@ -234,8 +243,13 @@ public abstract class GenericSerializer<T> implements Serializer<T>
 		{
 			return null;
 		}
+		if (!clazz.equals(type_info.clazz))
+		{
+			return deserializeAs(unwrapTypeInfo(type_info.e), type_info.clazz);
+		}
 		// Is the object a primitive?
 		clazz = getWrapperClass(type_info.clazz);
+		
 		for (PrimitiveHandler<T> h : m_primitiveHandlers)
 		{
 			if (h.appliesTo(clazz))
