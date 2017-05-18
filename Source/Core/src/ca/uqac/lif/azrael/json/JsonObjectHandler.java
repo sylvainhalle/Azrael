@@ -1,6 +1,6 @@
 /*
     A serializer for Java objects
-    Copyright (C) 2016 Sylvain Hallé
+    Copyright (C) 2016-2017 Sylvain Hallé
     Laboratoire d'informatique formelle
     Université du Québec à Chicoutimi, Canada
 
