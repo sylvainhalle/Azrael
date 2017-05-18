@@ -161,7 +161,7 @@ public class SerializationTest
 		List<JsonElement> obj_a = new LinkedList<JsonElement>();
 		obj_a.add(new JsonString("1"));
 		obj_a.add(new JsonString("2"));
-		obj_a.add(new JsonString("3"));
+		obj_a.add(new JsonNumber(3));
 		JsonElement e = m_serializer.serialize(obj_a);
 		assertNotNull(e);
 		assertTrue("Serialized element should be a list, got a " + e.getClass().getSimpleName(), e instanceof JsonList);
@@ -170,6 +170,13 @@ public class SerializationTest
 		Object o_des = m_serializer.deserializeAs(e, LinkedList.class);
 		assertNotNull(o_des);
 		assertTrue("Object should be an instance of LinkedList, got " + o_des.getClass().getSimpleName(), o_des instanceof LinkedList);
+		Object l_elem;
+		l_elem = ((LinkedList<?>) o_des).get(0);
+		assertTrue(l_elem instanceof JsonString);
+		l_elem = ((LinkedList<?>) o_des).get(1);
+		assertTrue(l_elem instanceof JsonString);
+		l_elem = ((LinkedList<?>) o_des).get(2);
+		assertTrue(l_elem instanceof JsonNumber);
 	}
 	
 	@Test
