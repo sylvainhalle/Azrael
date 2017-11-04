@@ -160,6 +160,9 @@ Projects that use Azrael
 - [Cornipickle](https://github.com/liflab/cornipickle), a web testing tool
 - [LabPal](https://liflab.github.io/labpal), a library for running
   experiments on a computer
+- The [Serialization palette](https://github.com/liflab/beepbeep-3-palettes)
+  of the [BeepBeep 3](https://liflab.github.io/beepbeep-3) event stream
+  processing engine.
 
 About the author                                                   {#about}
 ----------------
