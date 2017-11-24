@@ -26,7 +26,7 @@
   <name>Azrael</name>
   
   <!-- The project's version number -->
-  <version>0.7.2-alpha</version>
+  <version>0.7.3-alpha</version>
   
   <!-- The project's author. Currently this only
   shows up in the footer of the Javadoc documentation. -->
@@ -51,7 +51,7 @@
       <name>json-lif</name>
       <classname>ca.uqac.lif.json.JsonMain</classname>
       <files>
-        <zip>https://github.com/liflab/json-lif/releases/download/v1.6.2/json-lif-1.6.2.zip</zip>
+        <zip>https://github.com/liflab/json-lif/releases/download/v1.6.3/json-lif-1.6.3.zip</zip>
       </files>
     </dependency>
   </dependencies>
