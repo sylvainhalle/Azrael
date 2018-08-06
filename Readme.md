@@ -3,6 +3,8 @@ Azrael: a universal serialization library for Java
 
 ![Azrael the cat](azrael.jpg?raw=true)
 
+<img src="http://leduotang.ca/Azrael.svg" height="16" alt="Downloads"/>
+
 Azrael is a [serialization](https://en.wikipedia.org/wiki/Serialization)
 library for Java. It allows Java objects to be saved ("serialized") to
 some data format, and to be reconstructed ("deserialized") from that saved
