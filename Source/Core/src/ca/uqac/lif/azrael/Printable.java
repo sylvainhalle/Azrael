@@ -16,19 +16,22 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package ca.uqac.lif.azrael;
 
 /**
- * Core package containing only the definition of the interfaces.
- * <p>
- * Typically, if you want to create objects that <em>support</em> serialization,
- * you only need to import this package into your project and make sure your
- * objects implement the {@link ca.uqac.lif.azrael.Readable Readable} and
- * {@link ca.uqac.lif.azrael.Readable Printable} interfaces.
- * <p>
- * On the other hand, if you want to <em>use</em> serialization, you also need
- * to import the {@link ca.uqac.lif.azrael.serialization} package and
- * one of the concrete packages that implement serialization (such as
- * {@link ca.uqac.lif.azrael.serialization.json} or
- * {@link ca.uqac.lif.azrael.serialization.xml}).
+ * Interface advertising that an object can write its contents
+ * into an object printer. This is equivalent to serializing the
+ * contents of the object.
+ * 
+ * @author Sylvain Hallé
  */
-package ca.uqac.lif.azrael;
+public interface Printable 
+{
+	/**
+	 * Prints the content of the object into an object printer
+	 * @param printer The printer to print the object to
+	 */
+	public Object print(ObjectPrinter<?> printer) throws PrintException;
+	
+	
+}

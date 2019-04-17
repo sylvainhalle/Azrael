@@ -18,17 +18,12 @@
  */
 
 /**
- * Core package containing only the definition of the interfaces.
+ * Defines the {@link ObjectSerializer} and {@link ObjectDeserializer}
+ * abstract classes.
  * <p>
- * Typically, if you want to create objects that <em>support</em> serialization,
- * you only need to import this package into your project and make sure your
- * objects implement the {@link ca.uqac.lif.azrael.Readable Readable} and
- * {@link ca.uqac.lif.azrael.Readable Printable} interfaces.
- * <p>
- * On the other hand, if you want to <em>use</em> serialization, you also need
- * to import the {@link ca.uqac.lif.azrael.serialization} package and
- * one of the concrete packages that implement serialization (such as
+ * If you want to <em>use</em> serialization in a project, you also need
+ * to import one of the concrete packages that implement serialization (such as
  * {@link ca.uqac.lif.azrael.serialization.json} or
  * {@link ca.uqac.lif.azrael.serialization.xml}).
  */
-package ca.uqac.lif.azrael;
+package ca.uqac.lif.azrael.serialization;

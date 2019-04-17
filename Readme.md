@@ -39,7 +39,7 @@ JSON. With Azrael, you can do the following:
     
     // Create a serializer for JSON
     JsonSerializer ser = new JsonSerializer();
-    JsonElement e = ser.serialize(my_obj);
+    JsonElement e = ser.print(my_obj);
 
 The contents of `my_obj` are saved in a JSON element, which you can save
 somewhere as a string using its `toString()` method.
@@ -48,7 +48,7 @@ Now suppose you want to reconstruct an object of `MyClass` with the exact
 data that was contained in the saved JSON. You first reconstruct the JSON
 element `e` (from a String, etc.), and then call the `deserialize()` method:
 
-    MyClass my_new_obj = (MyClass) ser.deserializeAs(e, MyClass.class);
+    MyClass my_new_obj = (MyClass) ser.read(e);
 
 You could check for yourself that the member fields of `my_obj` and
 `my_new_obj` are identical. Note that you don't need to use the same
@@ -61,8 +61,15 @@ libraries work too, although with some peculiarities).
 Dependencies
 ------------
 
-The library [json-lif](https://github.com/liflab/json-lif) should be in your
-classpath to use JSON serialization.
+This project is separated in two parts:
+
+- The `Core` folder generates a small JAR file that only defines the
+  *interfaces* to support serialization.
+- The other folders implement serialization in a variety of formats. For
+  example, the `Json` folder generates provides a JSON serializer. These JARs
+  may themselves have dependencies; for example, the library
+  [json-lif](https://github.com/liflab/json-lif) should be in your
+  classpath to use JSON serialization.
 
 Features
 --------
@@ -87,8 +94,7 @@ as you would for any other object:
     List<Integer> list1 = new LinkedList<Integer>();
     (...Fill the list with stuff...)
     Object o = serializer.serialize(list1);
-    List<Integer> list2 = (List<Integer>) serializer.deserializeAs(
-      o, LinkedList.class);
+    List<Integer> list2 = (List<Integer>) serializer.deserialize(o);
 
 The contents of `list2` recreate precisely the original objects with their
 *actual* (not declared) type. No custom code is needed (contrarily to what

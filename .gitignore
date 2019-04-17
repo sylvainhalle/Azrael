@@ -10,10 +10,11 @@
 *.old
 
 # Auto-generated folders
-/doc/
-/lib/
-/dep/
-/tests/
+**/doc/
+**/lib/
+**/bin/
+**/dep/
+**/tests/
 
 # Top-level jar, but not jars in subfolders (if any)
 *.jar
