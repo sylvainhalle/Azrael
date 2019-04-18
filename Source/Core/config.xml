@@ -30,7 +30,7 @@
   <author>Sylvain Hallé</author>
 
   <jar>
-    <filename>azrael-core.jar</filename>
+    <filename>../azrael-core.jar</filename>
     <basename>Azrael</basename>
   </jar>
 

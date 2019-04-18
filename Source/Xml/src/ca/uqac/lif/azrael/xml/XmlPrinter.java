@@ -20,6 +20,7 @@ package ca.uqac.lif.azrael.xml;
 
 import ca.uqac.lif.azrael.ObjectPrinter;
 import ca.uqac.lif.azrael.PrintException;
+import ca.uqac.lif.xml.TextElement;
 import ca.uqac.lif.xml.XmlElement;
 
 public class XmlPrinter extends ObjectPrinter<XmlElement>
@@ -36,6 +37,21 @@ public class XmlPrinter extends ObjectPrinter<XmlElement>
 	
 	public static final String s_mapName = "map";
 	
+	public static final String s_listName = "list";
+	
+	public static final String s_entryName = "entry";
+	
+	public static final String s_wrapName = "object";
+	
+	public static final String s_classKey = "class";
+	
+	public static final String s_keyKey = "key";
+	
+	public static final String s_valueKey = "value";
+	
+	/**
+	 * Creates a new XML printer
+	 */
 	public XmlPrinter()
 	{
 		super();
@@ -43,11 +59,20 @@ public class XmlPrinter extends ObjectPrinter<XmlElement>
 		m_handlers.add(new BooleanPrintHandler(this));
 		m_handlers.add(new NumberPrintHandler(this));
 		m_handlers.add(new StringPrintHandler(this));
+		m_handlers.add(new ListPrintHandler(this));
+		m_handlers.add(new MapPrintHandler(this));
 	}
 	
 	@Override
-	public XmlElement wrap(Object o, XmlElement t) throws PrintException {
-		// TODO Auto-generated method stub
-		return null;
+	public XmlElement wrap(Object o, XmlElement t) throws PrintException
+	{
+		XmlElement obj = new XmlElement(s_wrapName);
+		XmlElement cl = new XmlElement(s_classKey);
+		cl.addChild(new TextElement(o.getClass().getName()));
+		obj.addChild(cl);
+		XmlElement va = new XmlElement(s_valueKey);
+		va.addChild(t);
+		obj.addChild(va);
+		return obj;
 	}
 }

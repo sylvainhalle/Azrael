@@ -30,7 +30,7 @@
   <author>Sylvain Hallé</author>
 
   <jar>
-    <filename>azrael-json.jar</filename>
+    <filename>../azrael-json.jar</filename>
     <basename>Azrael JSON</basename>
   </jar>
 
@@ -58,6 +58,14 @@
     Write JAR dependencies here.
   -->
   <dependencies>
-    <!-- None -->
+    <dependency>
+    <!-- json-lif. Used to parse JSON messages -->
+      <name>json-lif</name>
+      <classname>ca.uqac.lif.json.JsonMain</classname>
+      <files>
+        <zip>https://github.com/liflab/json-lif/releases/download/v1.6.2/json-lif-1.6.2.zip</zip>
+      </files>
+      <bundle>true</bundle>
+    </dependency>
   </dependencies>
 </build>

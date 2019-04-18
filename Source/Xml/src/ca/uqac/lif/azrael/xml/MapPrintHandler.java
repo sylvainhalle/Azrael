@@ -18,12 +18,14 @@
  */
 package ca.uqac.lif.azrael.xml;
 
+import java.util.Map;
+
 import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.xml.XmlElement;
 
-public class NullPrintHandler extends XmlPrintHandler
+public class MapPrintHandler extends XmlPrintHandler
 {
-	public NullPrintHandler(XmlPrinter printer)
+	public MapPrintHandler(XmlPrinter printer)
 	{
 		super(printer);
 	}
@@ -31,12 +33,25 @@ public class NullPrintHandler extends XmlPrintHandler
 	@Override
 	public boolean canHandle(Object o) 
 	{
-		return o == null;
+		return o instanceof Map;
 	}
 
 	@Override
 	public XmlElement handle(Object o) throws PrintException
 	{
-		return XmlPrinter.NULL;
+		Map<?,?> in_map = (Map<?,?>) o;
+		XmlElement x_map = new XmlElement(XmlPrinter.s_mapName);
+		for (Map.Entry<?,?> entry : in_map.entrySet())
+		{
+			XmlElement x_entry = new XmlElement(XmlPrinter.s_entryName);
+			XmlElement x_key = new XmlElement(XmlPrinter.s_keyKey);
+			x_key.addChild(m_printer.print(entry.getKey()));
+			XmlElement x_value = new XmlElement(XmlPrinter.s_valueKey);
+			x_value.addChild(m_printer.print(entry.getKey()));
+			x_entry.addChild(x_key);
+			x_entry.addChild(x_value);
+			x_map.addChild(x_entry);
+		}
+		return m_printer.wrap(o, x_map);
 	}
 }

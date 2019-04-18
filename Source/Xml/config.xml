@@ -30,7 +30,7 @@
   <author>Sylvain Hallé</author>
 
   <jar>
-    <filename>azrael-xml.jar</filename>
+    <filename>../azrael-xml.jar</filename>
     <basename>Azrael XML</basename>
   </jar>
 
@@ -58,6 +58,14 @@
     Write JAR dependencies here.
   -->
   <dependencies>
-    <!-- None -->
+    <dependency>
+    <!-- xml-lif. Used to parse XML messages -->
+      <name>xml-lif</name>
+      <classname>ca.uqac.lif.xml.XmlElement</classname>
+      <files>       
+        <zip>https://github.com/liflab/xml-lif/releases/download/v1.2.2/xml-lif-1.2.2.zip</zip>
+      </files>
+      <bundle>true</bundle>
+    </dependency>
   </dependencies>
 </build>
