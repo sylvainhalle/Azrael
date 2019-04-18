@@ -16,9 +16,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ca.uqac.lif.azrael;
 
-public interface Readable
-{
-	public Object read(ObjectReader<?> reader, Object o) throws ReadException;
-}
+/**
+ * JSON serialization library.
+ */
+package ca.uqac.lif.azrael.json;

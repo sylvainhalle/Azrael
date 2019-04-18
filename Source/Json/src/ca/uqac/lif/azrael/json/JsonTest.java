@@ -16,7 +16,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ca.uqac.lif.azrael.serialization.json;
+package ca.uqac.lif.azrael.json;
 
 import static org.junit.Assert.*;
 
@@ -45,10 +45,10 @@ public class JsonTest
 	public void testJson1() throws PrintException, ReadException
 	{
 		SimpleObject mp = new SimpleObject(3, "abc");
-		JsonSerializer printer = new JsonSerializer();
+		JsonPrinter printer = new JsonPrinter();
 		JsonElement je = printer.print(mp);
 		assertNotNull(je);
-		JsonDeserializer reader = new JsonDeserializer();
+		JsonReader reader = new JsonReader();
 		Object o = reader.read(je);
 		assertNotNull(o);
 		assertTrue(o instanceof SimpleObject);
@@ -63,10 +63,10 @@ public class JsonTest
 		ComplexObject co = new ComplexObject();
 		co.add(new SimpleObject(3, "foo"));
 		co.add(new SimpleObject(5, "bar"));
-		JsonSerializer printer = new JsonSerializer();
+		JsonPrinter printer = new JsonPrinter();
 		JsonElement je = printer.print(co);
 		assertNotNull(je);
-		JsonDeserializer reader = new JsonDeserializer();
+		JsonReader reader = new JsonReader();
 		Object o = reader.read(je);
 		assertNotNull(o);
 		assertTrue(o instanceof ComplexObject);
@@ -87,16 +87,37 @@ public class JsonTest
 		list.add(new JsonNumber(3));
 		list.add(new JsonNumber(5));
 		map.put("b", list);
-		JsonSerializer printer = new JsonSerializer();
+		JsonPrinter printer = new JsonPrinter();
 		JsonElement je = printer.print(map);
 		assertNotNull(je);
-		JsonDeserializer reader = new JsonDeserializer();
+		JsonReader reader = new JsonReader();
 		Object o = reader.read(je);
 		assertNotNull(o);
 		assertTrue(o instanceof JsonMap);
 		JsonMap nco = (JsonMap) o;
 		assertEquals(2, nco.size());
 		assertEquals(new JsonString("foo"), nco.get("a"));
+	}
+	
+	@Test
+	public void testJson4() throws PrintException, ReadException
+	{
+		NonPrintableObject co = new NonPrintableObject();
+		co.add(new SimpleObject(3, "foo"));
+		co.add(new SimpleObject(5, "bar"));
+		JsonPrinter printer = new JsonPrinter();
+		JsonElement je = printer.print(co);
+		assertNotNull(je);
+		JsonReader reader = new JsonReader();
+		Object o = reader.read(je);
+		assertNotNull(o);
+		assertTrue(o instanceof NonPrintableObject);
+		NonPrintableObject nco = (NonPrintableObject) o;
+		assertEquals(2, nco.m_objects.size());
+		assertEquals(3, nco.m_objects.get(0).m_x);
+		assertEquals("foo", nco.m_objects.get(0).m_y);
+		assertEquals(5, nco.m_objects.get(1).m_x);
+		assertEquals("bar", nco.m_objects.get(1).m_y);
 	}
 	
 	protected static class SimpleObject implements Printable, Readable
@@ -129,12 +150,13 @@ public class JsonTest
 			return printer.print(contents);
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
-		public SimpleObject read(ObjectReader reader, Object o) throws ReadException 
+		public SimpleObject read(ObjectReader<?> reader, Object o) throws ReadException 
 		{
-			Map<String,?> contents = reader.readMap(o);
-			int x = reader.readNumber(contents.get("x")).intValue();
-			String y = reader.readString(contents.get("y"));
+			Map<Object,Object> contents = (Map<Object,Object>) reader.read(o);
+			int x = ((Number) contents.get("x")).intValue();
+			String y = (String) contents.get("y");
 			return new SimpleObject(x, y);
 		}
 	}
@@ -164,16 +186,35 @@ public class JsonTest
 		}
 
 		@Override
-		public ComplexObject read(ObjectReader reader, Object o) throws ReadException 
+		public ComplexObject read(ObjectReader<?> reader, Object o) throws ReadException 
 		{
-			List<?> contents = reader.readList(o);
+			List<?> contents = (List<?>) reader.read(o);
 			ComplexObject co = new ComplexObject();
 			for (Object l_o : contents)
 			{
-				Object s_o = (SimpleObject) reader.read(l_o);
-				co.add((SimpleObject) s_o);
+				SimpleObject s_o = (SimpleObject) l_o;
+				co.add(s_o);
 			}
 			return co;
+		}
+	}
+	
+	protected static class NonPrintableObject
+	{
+		List<SimpleObject> m_objects;
+		
+		/**
+		 * A readable object must have a no-args constructor
+		 */
+		public NonPrintableObject()
+		{
+			super();
+			m_objects = new ArrayList<SimpleObject>();
+		}
+		
+		public void add(SimpleObject o)
+		{
+			m_objects.add(o);
 		}
 	}
 }

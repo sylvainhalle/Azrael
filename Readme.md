@@ -39,7 +39,7 @@ JSON. With Azrael, you can do the following:
     
     // Create a serializer for JSON
     JsonSerializer ser = new JsonSerializer();
-    JsonElement e = ser.print(my_obj);
+    JsonElement e = ser.serialize(my_obj);
 
 The contents of `my_obj` are saved in a JSON element, which you can save
 somewhere as a string using its `toString()` method.
@@ -48,7 +48,8 @@ Now suppose you want to reconstruct an object of `MyClass` with the exact
 data that was contained in the saved JSON. You first reconstruct the JSON
 element `e` (from a String, etc.), and then call the `deserialize()` method:
 
-    MyClass my_new_obj = (MyClass) ser.read(e);
+    JsonDeserializer deser = new JsonDeserializer();
+    MyClass my_new_obj = (MyClass) deser.deserialize(e);
 
 You could check for yourself that the member fields of `my_obj` and
 `my_new_obj` are identical. Note that you don't need to use the same

@@ -3,12 +3,12 @@
     Copyright (C) 2016-2019 Sylvain Hallé
     Laboratoire d'informatique formelle
     Université du Québec à Chicoutimi, Canada
-    
+
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
     by the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
-    
+
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -18,7 +18,9 @@
  */
 package ca.uqac.lif.azrael;
 
-public interface Readable
+public interface ReadHandler<T> 
 {
-	public Object read(ObjectReader<?> reader, Object o) throws ReadException;
+	public boolean canHandle(T o) throws ReadException;
+	
+	public Object handle(T o) throws ReadException;
 }
