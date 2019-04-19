@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="SuperProject" default="all" basedir=".">
+  <target name="all">
+    <!-- Compile core -->
+    <ant dir="Core" target="jar" />
+    <!-- Copy core to other projects -->
+    <copy file="azrael-core.jar" todir="Json/lib" />
+    <copy file="azrael-core.jar" todir="Size/lib" />
+    <copy file="azrael-core.jar" todir="Xml/lib" />
+    <!-- Compile other projects -->
+    <ant dir="Json" target="jar" />
+    <ant dir="Size" target="jar" />
+    <ant dir="Xml" target="jar" />
+  </target>
+</project>

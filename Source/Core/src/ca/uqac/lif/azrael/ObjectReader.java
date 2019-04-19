@@ -24,6 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Reads the content of an object in a given format, to recreate the
+ * corresponding instance.
+ * @author Sylvain Hallé
+ *
+ * @param <T> The format to which the object has been written
+ */
 public abstract class ObjectReader<T>
 {
 	/**
@@ -31,10 +38,20 @@ public abstract class ObjectReader<T>
 	 */
 	protected Set<ClassLoader> m_classLoaders;
 	
+	/**
+	 * A list of objects that handle the printing of objects of various
+	 * types
+	 */
 	protected List<ReadHandler<T>> m_handlers;
 	
+	/**
+	 * The default handler to use when no other accepts an object
+	 */
 	protected ReadHandler<T> m_reflectionHandler = new ReflectionReadHandler<T>(this);
 	
+	/**
+	 * Creates a new object reader
+	 */
 	public ObjectReader()
 	{
 		super();
@@ -144,6 +161,12 @@ public abstract class ObjectReader<T>
 		m_classLoaders.add(cl);
 	}
 
+	/**
+	 * Finds a class by its name
+	 * @param class_name The name of the class
+	 * @return The class
+	 * @throws ClassNotFoundException Thrown if the class could not be found
+	 */
 	public Class<?> findClass(String class_name) throws ClassNotFoundException
 	{
 		Class<?> candidate = null;

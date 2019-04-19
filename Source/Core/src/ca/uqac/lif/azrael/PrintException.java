@@ -28,16 +28,28 @@ public class PrintException extends Exception
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Creates a new print exception
+	 * @param t The throwable from which the exception is created
+	 */
 	public PrintException(Throwable t)
 	{
 		super(t);
 	}
 
+	/**
+	 * Creates a new print exception
+	 * @param e The exception from which the exception is created
+	 */
 	public PrintException(Exception e)
 	{
 		super(e);
 	}
 
+	/**
+	 * Creates a new print exception
+	 * @param message The message associated to the exception
+	 */
 	public PrintException(String message)
 	{
 		super(message);

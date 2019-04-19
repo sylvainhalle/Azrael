@@ -26,9 +26,8 @@
  * {@link ca.uqac.lif.azrael.Readable Printable} interfaces.
  * <p>
  * On the other hand, if you want to <em>use</em> serialization, you also need
- * to import the {@link ca.uqac.lif.azrael.serialization} package and
  * one of the concrete packages that implement serialization (such as
- * {@link ca.uqac.lif.azrael.serialization.json} or
- * {@link ca.uqac.lif.azrael.serialization.xml}).
+ * {@link ca.uqac.lif.azrael.json} or
+ * {@link ca.uqac.lif.azrael.xml}).
  */
 package ca.uqac.lif.azrael;

@@ -30,7 +30,7 @@
   <author>Sylvain Hallé</author>
 
   <jar>
-    <filename>azrael-size.jar</filename>
+    <filename>../azrael-size.jar</filename>
     <basename>Azrael Size</basename>
   </jar>
 

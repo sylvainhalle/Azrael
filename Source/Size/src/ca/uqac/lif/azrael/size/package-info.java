@@ -19,5 +19,9 @@
 
 /**
  * A serializer that recursively calculates the size of an object.
+ * The information on how to compute the size of various data structures
+ * is taken from the Chris Bailey's post 
+ * <i><a href="https://www.ibm.com/developerworks/library/j-codetoheap/index.html">From 
+ * Java code to Java Heap</a></i>.
  */
 package ca.uqac.lif.azrael.size;

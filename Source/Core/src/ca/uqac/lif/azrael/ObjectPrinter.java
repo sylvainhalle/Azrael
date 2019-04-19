@@ -21,10 +21,23 @@ package ca.uqac.lif.azrael;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Prints the content of an object to a given format.
+ * @author Sylvain Hallé
+ *
+ * @param <T> The format used to print the object's contents
+ */
 public abstract class ObjectPrinter<T>
 {
+	/**
+	 * A list of objects that handle the printing of objects of various
+	 * types
+	 */
 	protected List<PrintHandler<T>> m_handlers;
 	
+	/**
+	 * The default handler to use when no other handler accepts an object
+	 */
 	protected PrintHandler<T> m_reflectionHandler = new ReflectionPrintHandler<T>(this);
 	
 	/**
@@ -33,6 +46,9 @@ public abstract class ObjectPrinter<T>
 	 */
 	protected boolean m_usePrintable = true;
 	
+	/**
+	 * Creates a new object printer
+	 */
 	public ObjectPrinter()
 	{
 		super();
