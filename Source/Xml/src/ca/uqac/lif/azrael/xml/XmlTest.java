@@ -36,6 +36,10 @@ import ca.uqac.lif.azrael.Readable;
 import ca.uqac.lif.xml.XmlElement;
 import ca.uqac.lif.xml.TextElement;
 
+/**
+ * Unit tests for XML serialization.
+ * @author Sylvain Hallé
+ */
 public class XmlTest 
 {
 	@Test

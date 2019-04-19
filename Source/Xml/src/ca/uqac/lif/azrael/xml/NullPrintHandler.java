@@ -21,6 +21,10 @@ package ca.uqac.lif.azrael.xml;
 import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.xml.XmlElement;
 
+/**
+ * Exports the null value.
+ * @author Sylvain Hallé
+ */
 public class NullPrintHandler extends XmlPrintHandler
 {
 	public NullPrintHandler(XmlPrinter printer)

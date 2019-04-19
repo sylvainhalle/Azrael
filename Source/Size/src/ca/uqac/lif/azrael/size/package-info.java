@@ -16,35 +16,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ca.uqac.lif.azrael.xml;
-
-import ca.uqac.lif.azrael.PrintException;
-import ca.uqac.lif.xml.TextElement;
-import ca.uqac.lif.xml.XmlElement;
 
 /**
- * Exports a string.
- * @author Sylvain Hallé
+ * A serializer that recursively calculates the size of an object.
  */
-public class StringPrintHandler extends XmlPrintHandler
-{
-	public StringPrintHandler(XmlPrinter printer)
-	{
-		super(printer);
-	}
-
-	@Override
-	public boolean canHandle(Object o) 
-	{
-		return o instanceof String;
-	}
-
-	@Override
-	public XmlElement handle(Object o) throws PrintException
-	{
-		String s = (String) o;
-		XmlElement xe = new XmlElement(XmlPrinter.s_stringName);
-		xe.addChild(new TextElement(s));
-		return xe;
-	}
-}
+package ca.uqac.lif.azrael.size;

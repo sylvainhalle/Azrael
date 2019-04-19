@@ -22,6 +22,10 @@ import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.xml.TextElement;
 import ca.uqac.lif.xml.XmlElement;
 
+/**
+ * Exports a number.
+ * @author Sylvain Hallé
+ */
 public class NumberPrintHandler extends XmlPrintHandler
 {
 	public NumberPrintHandler(XmlPrinter printer)

@@ -21,6 +21,10 @@ package ca.uqac.lif.azrael.xml;
 import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.xml.XmlElement;
 
+/**
+ * Exports a Boolean value.
+ * @author Sylvain Hallé
+ */
 public class BooleanPrintHandler extends XmlPrintHandler
 {
 	public BooleanPrintHandler(XmlPrinter printer)

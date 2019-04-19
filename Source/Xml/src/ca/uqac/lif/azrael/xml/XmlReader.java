@@ -22,6 +22,10 @@ import ca.uqac.lif.azrael.ObjectReader;
 import ca.uqac.lif.azrael.ReadException;
 import ca.uqac.lif.xml.XmlElement;
 
+/**
+ * Reads the contents of an object from an XML element.
+ * @author Sylvain Hallé
+ */
 public class XmlReader extends ObjectReader<XmlElement>
 {
 

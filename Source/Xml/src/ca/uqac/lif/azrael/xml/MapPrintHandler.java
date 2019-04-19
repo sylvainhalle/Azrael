@@ -23,6 +23,10 @@ import java.util.Map;
 import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.xml.XmlElement;
 
+/**
+ * Exports a map.
+ * @author Sylvain Hallé
+ */
 public class MapPrintHandler extends XmlPrintHandler
 {
 	public MapPrintHandler(XmlPrinter printer)

@@ -23,6 +23,10 @@ import java.util.List;
 import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.xml.XmlElement;
 
+/**
+ * Exports a list.
+ * @author Sylvain Hallé
+ */
 public class ListPrintHandler extends XmlPrintHandler
 {
 	public ListPrintHandler(XmlPrinter printer)

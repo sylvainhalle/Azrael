@@ -23,6 +23,10 @@ import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.xml.TextElement;
 import ca.uqac.lif.xml.XmlElement;
 
+/**
+ * Prints an object into an XML element.
+ * @author Sylvain Hallé
+ */
 public class XmlPrinter extends ObjectPrinter<XmlElement>
 {
 	public static final XmlElement TRUE = new XmlElement("true");

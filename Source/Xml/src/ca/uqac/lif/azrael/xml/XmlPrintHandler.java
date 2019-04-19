@@ -21,6 +21,10 @@ package ca.uqac.lif.azrael.xml;
 import ca.uqac.lif.azrael.PrintHandler;
 import ca.uqac.lif.xml.XmlElement;
 
+/**
+ * Handles the exporting of an object into XML.
+ * @author Sylvain Hallé
+ */
 public abstract class XmlPrintHandler implements PrintHandler<XmlElement>
 {
 	protected XmlPrinter m_printer;
