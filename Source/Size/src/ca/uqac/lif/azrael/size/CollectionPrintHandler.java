@@ -18,6 +18,7 @@
  */
 package ca.uqac.lif.azrael.size;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -86,7 +87,7 @@ public class CollectionPrintHandler extends ReferencePrintHandler
 			}
 			return size;
 		}
-		if (o instanceof ArrayList)
+		if (o instanceof ArrayList || o instanceof ArrayDeque)
 		{
 			ArrayList<?> col = (ArrayList<?>) o;
 			int size = 48 + 4 * col.size();

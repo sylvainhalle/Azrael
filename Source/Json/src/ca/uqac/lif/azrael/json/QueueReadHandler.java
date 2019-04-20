@@ -18,37 +18,44 @@
  */
 package ca.uqac.lif.azrael.json;
 
-import ca.uqac.lif.azrael.ObjectPrinter;
-import ca.uqac.lif.azrael.PrintException;
+import java.util.Queue;
+
+import ca.uqac.lif.azrael.ReadException;
 import ca.uqac.lif.json.JsonElement;
-import ca.uqac.lif.json.JsonMap;
-import ca.uqac.lif.json.JsonString;
+import ca.uqac.lif.json.JsonList;
 
-public class JsonPrinter extends ObjectPrinter<JsonElement>
+public class QueueReadHandler extends JsonReadHandler
 {
-	public static final transient String CLASS_KEY = "!c";
 
-	public static final transient String CONTENT_KEY = "!t";
-
-	public JsonPrinter()
+	public QueueReadHandler(JsonReader reader)
 	{
-		super();
-		m_handlers.add(new NullPrintHandler(this));
-		m_handlers.add(new BooleanPrintHandler(this));
-		m_handlers.add(new NumberPrintHandler(this));
-		m_handlers.add(new StringPrintHandler(this));
-		m_handlers.add(new ListPrintHandler(this));
-		m_handlers.add(new QueuePrintHandler(this));
-		m_handlers.add(new MapPrintHandler(this));
-		m_handlers.add(new RawPrintHandler(this));
+		super(reader);
 	}
 
 	@Override
-	public JsonElement wrap(Object o, JsonElement t) throws PrintException
+	public boolean canHandle(JsonElement o) throws ReadException
 	{
-		JsonMap map = new JsonMap();
-		map.put(CLASS_KEY, new JsonString(o.getClass().getName()));
-		map.put(CONTENT_KEY, t);
-		return map;
+		if (!m_reader.isWrapped(o))
+		{
+			return false;
+		}
+		Class<?> clazz = m_reader.unwrapType(o);
+		return Queue.class.isAssignableFrom(clazz);
 	}
+
+	@Override
+	public Queue<?> handle(JsonElement o) throws ReadException
+	{
+		Class<?> clazz = m_reader.unwrapType(o);
+		JsonList list = (JsonList) m_reader.unwrapContents(o);
+		@SuppressWarnings("unchecked")
+		Queue<Object> out_list = (Queue<Object>) m_reader.getInstance(clazz);
+		for (JsonElement el : list)
+		{
+			Object o_el = m_reader.read(el);
+			out_list.add(o_el);
+		}
+		return out_list;
+	}
+
 }

@@ -18,37 +18,35 @@
  */
 package ca.uqac.lif.azrael.json;
 
-import ca.uqac.lif.azrael.ObjectPrinter;
+import java.util.Queue;
+
 import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.json.JsonElement;
-import ca.uqac.lif.json.JsonMap;
-import ca.uqac.lif.json.JsonString;
+import ca.uqac.lif.json.JsonList;
 
-public class JsonPrinter extends ObjectPrinter<JsonElement>
+public class QueuePrintHandler extends JsonPrintHandler
 {
-	public static final transient String CLASS_KEY = "!c";
-
-	public static final transient String CONTENT_KEY = "!t";
-
-	public JsonPrinter()
+	public QueuePrintHandler(JsonPrinter printer)
 	{
-		super();
-		m_handlers.add(new NullPrintHandler(this));
-		m_handlers.add(new BooleanPrintHandler(this));
-		m_handlers.add(new NumberPrintHandler(this));
-		m_handlers.add(new StringPrintHandler(this));
-		m_handlers.add(new ListPrintHandler(this));
-		m_handlers.add(new QueuePrintHandler(this));
-		m_handlers.add(new MapPrintHandler(this));
-		m_handlers.add(new RawPrintHandler(this));
+		super(printer);
+	}
+	
+	@Override
+	public boolean canHandle(Object o) 
+	{
+		return o instanceof Queue;
 	}
 
 	@Override
-	public JsonElement wrap(Object o, JsonElement t) throws PrintException
+	public JsonElement handle(Object o) throws PrintException 
 	{
-		JsonMap map = new JsonMap();
-		map.put(CLASS_KEY, new JsonString(o.getClass().getName()));
-		map.put(CONTENT_KEY, t);
-		return map;
+		Queue<?> queue = (Queue<?>) o;
+		JsonList out_list = new JsonList();
+		for (Object e: queue)
+		{
+			JsonElement j_e = m_printer.print(e);
+			out_list.add(j_e);
+		}
+		return m_printer.wrap(o, out_list);
 	}
 }
