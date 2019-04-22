@@ -19,6 +19,7 @@
 package ca.uqac.lif.azrael;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,18 +61,14 @@ public abstract class ObjectReader<T>
 
 	/**
 	 * Deserializes the content of an object
-	 * @param o The serialized contents of the object
+	 * @param t The serialized contents of the object
 	 * @return The deserialized object
 	 * @throws ReadException Thrown if deserialization produced an error
 	 */
 	@SuppressWarnings("unchecked")
 	public Object read(Object t) throws ReadException
 	{
-		if (t == null)
-		{
-			throw new ReadException("Cannot deserialize from null");
-		}
-		if (isWrapped(t))
+		if (t != null && isWrapped(t))
 		{
 			Class<?> clazz = unwrapType(t);
 			if (Readable.class.isAssignableFrom(clazz))
@@ -87,6 +84,10 @@ public abstract class ObjectReader<T>
 			{
 				return handler.handle((T) t);
 			}
+		}
+		if (t == null)
+		{
+			throw new ReadException("Cannot deserialize from null");
 		}
 		return m_reflectionHandler.handle((T) t);
 	}
@@ -202,4 +203,36 @@ public abstract class ObjectReader<T>
 		return candidate;
 	}
 
+	/**
+	 * Sets the value of a field in an object
+	 * @param o The object
+	 * @param field_name The name of the field to set
+	 * @param value The value to set
+	 * @throws ReadException Thrown if the value cannot be assigned to this field
+	 */
+	public static void setField(Object o, String field_name, Object value) throws ReadException
+	{
+	  if (o == null)
+	  {
+	    return;
+	  }
+	  try
+    {
+      Field fld = ReflectionPrintHandler.getFromAllFields(field_name, o.getClass());
+      fld.setAccessible(true);
+      fld.set(o, value);
+    }
+    catch (NoSuchFieldException e)
+    {
+      throw new ReadException(e);
+    }
+    catch (IllegalArgumentException e)
+    {
+      throw new ReadException(e);
+    }
+    catch (IllegalAccessException e)
+    {
+      throw new ReadException(e);
+    }
+	}
 }

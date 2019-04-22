@@ -57,7 +57,7 @@ public class ReflectionReadHandler<T> implements ReadHandler<T>
 	 * @param clazz The class this object should be an instance of
 	 * @return A populated instance of the object. Note that this can
 	 *   be a different instance than the one passed through <code>o</code>.
-	 * @throws SerializerException If the operation cannot be carried on
+	 * @throws ReadException If the operation cannot be carried on
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected Object populateObject(Object o, Map<String,Object> contents, Class<?> clazz) throws ReadException

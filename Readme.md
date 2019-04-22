@@ -127,7 +127,7 @@ situation.
 the actual class of `my_b` is `B`, enabling it to properly deserialize the
 object. Works out of the box, period.
 
-### Not tied to JSON
+### Truly generic
 
 If you want to serialize objects to another format than JSON (XML, strings,
 whatever custom format you wish), other JSON libraries can't help you. You
@@ -143,9 +143,14 @@ a matter of fact, the code specific to JSON serialization is a mere 600
 lines long.) The serialized object is not even aware of the format it is
 being serialized into (even when it implements `Printable`).
 
-A nice consequence of Azrael's structure is that you can write serializers
-that do not even perform serialization. For example:
+Another nice consequence of Azrael's structure is that you can write
+serializers that do not even perform serialization. For example:
 
+- The `Core` folder provides an implementation of a serializer that prints
+  an object as itself. The deserializer deserializes primitive values as
+  themselves, and deserializes other objects as new instances of themselves.
+  The end result is a process that performs a
+  [deep copy](https://en.wikipedia.org/wiki/Object_copying) of an object.
 - The `Size` folder contains an implementation of a serializer that turns
   any object into a number. This can be used to compute the size of an
   arbitrary object using just 350 lines of code.
