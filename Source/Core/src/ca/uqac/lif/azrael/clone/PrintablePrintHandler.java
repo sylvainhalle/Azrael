@@ -20,23 +20,32 @@ package ca.uqac.lif.azrael.clone;
 
 import ca.uqac.lif.azrael.ObjectPrinter;
 import ca.uqac.lif.azrael.PrintException;
+import ca.uqac.lif.azrael.Printable;
 
-/**
- * Prints an object as itself.
- * @author Sylvain Hallé
- */
-public class ClonePrinter extends ObjectPrinter<Object>
+public class PrintablePrintHandler extends ClonePrintHandler
 {
-	public ClonePrinter()
-	{
-		super();
-		m_handlers.add(new PrintablePrintHandler(this));
-		m_handlers.add(new IdentityPrintHandler());
-	}
-	
-	@Override
-	public Object wrap(Object o, Object t) throws PrintException 
-	{
-		return new WrappedObject(o, t);
-	} 
+  public PrintablePrintHandler(ObjectPrinter<Object> printer)
+  {
+    super(printer);
+  }
+
+  @Override
+  public boolean canHandle(Object o)
+  {
+    return o instanceof Printable;
+  }
+
+  @Override
+  public Object handle(Object o) throws PrintException
+  {
+    Object in_o = m_printer.print(o);
+    return m_printer.wrap(o, in_o);
+  }
+
+  @Override
+  public void reset()
+  {
+    // Nothing to do
+  }
+
 }

@@ -32,6 +32,7 @@ public class CloneReader extends ObjectReader<Object>
 	public CloneReader()
 	{
 		super();
+		//m_handlers.add(new ReadableReadHandler(this));
 		m_handlers.add(new NullReadHandler(this));
 		m_handlers.add(new ListReadHandler(this));
 		m_handlers.add(new MapReadHandler(this));
@@ -43,18 +44,18 @@ public class CloneReader extends ObjectReader<Object>
 	@Override
 	protected Class<?> unwrapType(Object t) throws ReadException 
 	{
-		return t.getClass();
+	  return ((WrappedObject) t).getInnerClass();
 	}
 
 	@Override
 	protected Object unwrapContents(Object t) throws ReadException 
 	{
-		return t;
+		return ((WrappedObject) t).getInnerObject();
 	}
 
 	@Override
 	protected boolean isWrapped(Object t) 
 	{
-		return false;
+		return t instanceof WrappedObject;
 	}
 }

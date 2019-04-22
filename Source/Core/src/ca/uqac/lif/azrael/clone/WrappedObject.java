@@ -18,25 +18,49 @@
  */
 package ca.uqac.lif.azrael.clone;
 
-import ca.uqac.lif.azrael.ObjectPrinter;
-import ca.uqac.lif.azrael.PrintException;
-
 /**
- * Prints an object as itself.
+ * A special object that indicates that the object being serialized implements
+ * the {@link Readable} interface.
  * @author Sylvain Hallé
  */
-public class ClonePrinter extends ObjectPrinter<Object>
+public class WrappedObject
 {
-	public ClonePrinter()
-	{
-		super();
-		m_handlers.add(new PrintablePrintHandler(this));
-		m_handlers.add(new IdentityPrintHandler());
-	}
-	
-	@Override
-	public Object wrap(Object o, Object t) throws PrintException 
-	{
-		return new WrappedObject(o, t);
-	} 
+  /**
+   * The class of the original object
+   */
+  public Class<?> m_class;
+  
+  /**
+   * The object that is wrapped
+   */
+  public Object m_innerObject;
+  
+  /**
+   * Wraps an object
+   * @param o The object
+   */
+  public WrappedObject(Object o, Object printed)
+  {
+    super();
+    m_class = o.getClass();
+    m_innerObject = printed;
+  }
+  
+  /**
+   * Gets the wrapped object
+   * @return The object
+   */
+  public Object getInnerObject()
+  {
+    return m_innerObject;
+  }
+  
+  /**
+   * Gets the class of the original object
+   * @return The class
+   */
+  public Class<?> getInnerClass()
+  {
+    return m_class;
+  }
 }

@@ -18,25 +18,35 @@
  */
 package ca.uqac.lif.azrael.clone;
 
-import ca.uqac.lif.azrael.ObjectPrinter;
-import ca.uqac.lif.azrael.PrintException;
+import ca.uqac.lif.azrael.ObjectReader;
+import ca.uqac.lif.azrael.ReadException;
 
 /**
- * Prints an object as itself.
+ * Reads a wrapped object and returns the inner object.
  * @author Sylvain Hallé
  */
-public class ClonePrinter extends ObjectPrinter<Object>
+public class ReadableReadHandler extends CloneReadHandler
 {
-	public ClonePrinter()
-	{
-		super();
-		m_handlers.add(new PrintablePrintHandler(this));
-		m_handlers.add(new IdentityPrintHandler());
-	}
-	
-	@Override
-	public Object wrap(Object o, Object t) throws PrintException 
-	{
-		return new WrappedObject(o, t);
-	} 
+  /**
+   * Creates a new read handler
+   * @param reader The object reader to use
+   */
+  public ReadableReadHandler(ObjectReader<Object> reader)
+  {
+    super(reader);
+  }
+
+  @Override
+  public boolean canHandle(Object o) throws ReadException
+  {
+    return o instanceof WrappedObject;
+  }
+
+  @Override
+  public Object handle(Object o) throws ReadException
+  {
+    Object inner = ((WrappedObject) o).getInnerObject();
+    return inner;
+  }
+
 }

@@ -42,7 +42,7 @@ MyClass my_obj = new MyClass();
 my_obj.x = 1; my_obj.s = "abc"; my_obj.add(1.5);
 
 // Create a serializer for JSON
-JsonPrinter p = new JsonSerializer();
+JsonPrinter p = new JsonPrinter();
 JsonElement e = p.print(my_obj);
 ```
 
@@ -51,11 +51,11 @@ somewhere as a string using its `toString()` method.
 
 Now suppose you want to reconstruct an object of `MyClass` with the exact
 data that was contained in the saved JSON. You first reconstruct the JSON
-element `e` (from a String, etc.), and then call the `deserialize()` method:
+element `e` (from a String, etc.), and then call the `read()` method:
 
 ```java
-JsonReader deser = new JsonReader();
-MyClass my_new_obj = (MyClass) deser.read(e);
+JsonReader d = new JsonReader();
+MyClass my_new_obj = (MyClass) d.read(e);
 ```
 
 You could check for yourself that the member fields of `my_obj` and
@@ -75,63 +75,12 @@ serialization libraries, mostly
 [Genson](http://owlike.github.io/genson/). Here are a couple of features
 of Azrael for which other libraries didn't fit the author's needs.
 
-### Serialize lists, maps and sets
-
-In many other serialization libraries, "collections require special
-treatment since the Collections are of generic type and the type information
-is lost while converting to JSON due to Java type erasure" (says the [Gson
-documentation](http://www.studytrails.com/java/json/java-google-json-introduction.jsp)).
-
-**Not so with Azrael**, which *does* takes care of serializing the exact
-class of each element in a collection (list, map, set). Hence you can write,
-as you would for any other object:
-
-```java
-List<Integer> list1 = new LinkedList<Integer>();
-(...Fill the list with stuff...)
-Object o = serializer.print(list1);
-List<Integer> list2 = (List<Integer>) serializer.read(o);
-```
-
-The contents of `list2` recreate precisely the original objects with their
-*actual* (not declared) type. No custom code is needed (contrary to what
-Gson requires).
-
-### No reliance on declared type
-
-When serializing member fields of an object, Azrael inserts information
-about the actual type of an object, and not the type that is declared in
-a class. Consider the following example:
-
-```java
-abstract class A { 
-}
-
-class B extends A {
-  int x = 0;
-}
-
-class C {
-  A my_b = new B();
-}
-```
-
-When deserializing an object of class `C`, other libraries run into a
-problem, as they try to instantiate an object of class `A`, since this is
-the *declared* type of field `my_b`. But `A` is an abstract class, and
-cannot be instantiated. To handle this case with Gson, you need to write
-yet more custom code to take care of this (not quite) exceptional
-situation.
-
-**Not so with Azrael**, which takes care of adding to the serialization that
-the actual class of `my_b` is `B`, enabling it to properly deserialize the
-object. Works out of the box, period.
-
 ### Truly generic
 
-If you want to serialize objects to another format than JSON (XML, strings,
-whatever custom format you wish), other JSON libraries can't help you. You
-need to use yet another library (such as
+Existing serialization libraries are tied to a single specific output
+format. Hence, if you want to serialize objects to another format than JSON
+(XML, strings, whatever custom format you wish), a JSON library can't help
+you. You need to use yet another library (such as
 [XStream](http://x-stream.github.io/) for XML).
 
 **Not so with Azrael.** Its default `ObjectPrinter` and `ObjectReader`
@@ -141,7 +90,15 @@ the abstract methods of these two classes. To serialize to another format,
 simply override them in a different way to produce the output you wish. (As
 a matter of fact, the code specific to JSON serialization is a mere 600
 lines long.) The serialized object is not even aware of the format it is
-being serialized into (even when it implements `Printable`).
+being serialized into.
+
+This means that, in the example above, if you want to serialize `my_obj`
+into XML, you simply pass `my_obj` to another type of object printer:
+
+```java
+XmlPrinter p = new XmlSerializer();
+XmlElement e = p.print(my_obj);
+```
 
 Another nice consequence of Azrael's structure is that you can write
 serializers that do not even perform serialization. For example:
@@ -154,7 +111,7 @@ serializers that do not even perform serialization. For example:
 - The `Size` folder contains an implementation of a serializer that turns
   any object into a number. This can be used to compute the size of an
   arbitrary object using just 350 lines of code.
-
+  
 ### Not forced to use reflection
 
 Most libraries use reflection to serialize an object. Some may argue that
@@ -223,6 +180,57 @@ list are used to recreate a new instance of `MyClass`, but through means
 that the object itself controls. Remark how the timestamp that was
 serialized by the object is used to throw an exception when the copy is
 too old.
+
+### No reliance on declared type
+
+When serializing member fields of an object, Azrael inserts information
+about the actual type of an object, and not the type that is declared in
+a class. Consider the following example:
+
+```java
+abstract class A { 
+}
+
+class B extends A {
+  int x = 0;
+}
+
+class C {
+  A my_b = new B();
+}
+```
+
+When deserializing an object of class `C`, other libraries run into a
+problem, as they try to instantiate an object of class `A`, since this is
+the *declared* type of field `my_b`. But `A` is an abstract class, and
+cannot be instantiated. To handle this case with Gson, you need to write
+yet more custom code to take care of this (not quite) exceptional
+situation.
+
+**Not so with Azrael**, which takes care of adding to the serialization that
+the actual class of `my_b` is `B`, enabling it to properly deserialize the
+object. Works out of the box, period.
+
+This means that you can serialize generic collections such as lists, sets
+and maps easily. In many other serialization libraries, "collections require special
+treatment since the Collections are of generic type and the type information
+is lost while converting to JSON due to Java type erasure" (says the [Gson
+documentation](http://www.studytrails.com/java/json/java-google-json-introduction.jsp)).
+
+**Not so with Azrael**, which *does* takes care of serializing the exact
+class of each element in a collection (list, map, set). Hence you can write,
+as you would for any other object:
+
+```java
+List<Integer> list1 = new LinkedList<Integer>();
+(...Fill the list with stuff...)
+Object o = serializer.print(list1);
+List<Integer> list2 = (List<Integer>) serializer.read(o);
+```
+
+The contents of `list2` recreate precisely the original objects with their
+*actual* (not declared) type. No custom code is needed (contrary to what
+Gson requires).
 
 Specifying class loaders
 ------------------------
