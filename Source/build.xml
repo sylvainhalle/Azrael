@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+	A build script for a super-project containing multiple sub-projects
+    Copyright (C) 2019  Sylvain Hallé
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <project name="SuperProject" default="all" basedir=".">
+
+  <!-- The project's display name -->
+  <property name="build.name" value="Azrael"/>
+  
+  <!-- The author -->
+  <property name="build.author" value="Sylvain Hallé"/>
+  
   <target name="all">
     <!-- Compile core -->
     <ant dir="Core" target="jar" />
@@ -11,5 +35,49 @@
     <ant dir="Json" target="jar" />
     <ant dir="Size" target="jar" />
     <ant dir="Xml" target="jar" />
+  </target>
+  
+  <target name="javadoc">
+    <mkdir dir="../docs/javadoc"/>
+    <mkdir dir="../docs/javadoc/doc-files"/>
+    <javadoc
+      destdir="../docs/javadoc"
+      packagenames="*"
+      excludepackagenames=""
+      defaultexcludes="yes"
+      author="true"
+      version="true"
+      use="true"
+      Encoding="utf8"
+      docencoding="utf8"
+      charset="utf8"
+      windowtitle="Azrael Documentation">
+      <doctitle><![CDATA[<h1>]]>${build.name}<![CDATA[ Documentation</h1>]]></doctitle>
+      <bottom><![CDATA[<i>Copyright&nbsp;&#169; ]]>${build.author}<![CDATA[. All Rights Reserved.</i>]]></bottom>
+      <link href="http://docs.oracle.com/javase/6/docs/api/"/>
+      <sourcepath>
+        <pathelement path="Core/src"/>
+        <pathelement path="Json/src"/>
+        <pathelement path="Size/src"/>
+        <pathelement path="Xml/src"/>
+      </sourcepath>
+      <classpath>
+        <fileset dir="Core/dep">
+          <include name="**/*.jar"/>
+        </fileset>
+        <fileset dir="Core/lib">
+          <include name="**/*.jar"/>
+        </fileset>
+        <fileset dir="Size/dep">
+          <include name="**/*.jar"/>
+        </fileset>
+        <fileset dir="Json/dep">
+          <include name="**/*.jar"/>
+        </fileset>
+        <fileset dir="Xml/dep">
+          <include name="**/*.jar"/>
+        </fileset>
+      </classpath>
+    </javadoc>
   </target>
 </project>

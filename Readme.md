@@ -16,6 +16,8 @@ By default, Azrael comes with a serializer for
 API allows you to easily implement serialization to your own custom data
 format.
 
+[Read the API documentation](https://sylvainhalle.github.io/Azrael/javadoc)
+
 How it works
 ------------
 
@@ -251,6 +253,19 @@ where `MyClass` is any of the classes of `my.package`. This should normally
 be enough for all classes of that package. You can add more than one
 class loader to Azrael; when it attempts to instantiate an object, it tries
 them all until one of them works.
+
+Custom handlers
+---------------
+
+If you would like to serialize objects that do not implement `Printable` and
+`Readable` in a special way, you can do so by creating a custom
+`PrintHandler` and `ReadHandler`. The print handler must implement a method
+called `canHandle`, which must return `true` when given an object it can
+serialize (and `false` otherwise). The method `handle` should contain custom
+code that takes care of printing the content of that object. Conversely, the
+read handler also has a method called `canHandle`, and another called
+`read` which should should contain custom code that takes care of reading
+the content of that object.
 
 Dependencies
 ------------

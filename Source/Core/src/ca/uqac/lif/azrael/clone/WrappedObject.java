@@ -38,6 +38,7 @@ public class WrappedObject
   /**
    * Wraps an object
    * @param o The object
+   * @param printed The printed version of the object
    */
   public WrappedObject(Object o, Object printed)
   {
