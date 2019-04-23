@@ -18,11 +18,33 @@
  */
 package ca.uqac.lif.azrael;
 
+/**
+ * An interface that takes care of printing a specific type of object.
+ * @author Sylvain Hallé
+ *
+ * @param <T> The type to which objects are serialized
+ */
 public interface PrintHandler<T> 
 {
+	/**
+	 * Indicates whether this handler can take care of printing a particular
+	 * object.
+	 * @param o The object
+	 * @return <tt>true</tt> if this handler can print this object,
+	 * <tt>false</tt> otherwise
+	 */
 	public boolean canHandle(Object o);
 	
+	/**
+	 * Prints an object
+	 * @param o The object to be printed
+	 * @return The printed object
+	 * @throws PrintException Thrown if the object cannot be printed
+	 */
 	public T handle(Object o) throws PrintException;
 	
+	/**
+	 * Resets the internal state of the handler
+	 */
 	public void reset();
 }

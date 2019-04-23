@@ -18,9 +18,29 @@
  */
 package ca.uqac.lif.azrael;
 
+/**
+ * An interface that takes care of reading a specific type of object.
+ * @author Sylvain Hallé
+ *
+ * @param <T> The type from which objects are deserialized
+ */
 public interface ReadHandler<T> 
 {
-	public boolean canHandle(T o) throws ReadException;
+	/**
+	 * Indicates whether this handler can take care of reading a particular
+	 * object.
+	 * @param t The serialized version of the object
+	 * @return <tt>true</tt> if this handler can read this object,
+	 * <tt>false</tt> otherwise
+	 * @throws ReadException The internal object printer
+	 */
+	public boolean canHandle(T t) throws ReadException;
 	
-	public Object handle(T o) throws ReadException;
+	/**
+	 * Reads an object
+	 * @param t The serialized version of the object
+	 * @return The object read from <tt>t</tt>
+	 * @throws ReadException Thrown if the object cannot be read
+	 */
+	public Object handle(T t) throws ReadException;
 }

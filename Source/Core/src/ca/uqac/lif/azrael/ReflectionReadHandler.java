@@ -21,10 +21,24 @@ package ca.uqac.lif.azrael;
 import java.lang.reflect.Field;
 import java.util.Map;
 
+/**
+ * Read handler that uses reflection to deserialize and populate the fields
+ * of an object.
+ * @author Sylvain Hallé
+ *
+ * @param <T> The type from which objects are deserialized
+ */
 public class ReflectionReadHandler<T> implements ReadHandler<T>
 {
+	/**
+	 * The internal object reader
+	 */
 	protected ObjectReader<T> m_reader;
 
+	/**
+	 * Creates a new reflection read handler
+	 * @param reader The internal object reader
+	 */
 	public ReflectionReadHandler(ObjectReader<T> reader)
 	{
 		super();

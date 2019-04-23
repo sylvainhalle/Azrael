@@ -27,16 +27,32 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Print handler that uses reflection to serialize the fields of an object.
+ * @author Sylvain Hallé
+ *
+ * @param <T> The type to which objects are serialized
+ */
 public class ReflectionPrintHandler<T> implements PrintHandler<T>
 {
+	/**
+	 * The internal object printer
+	 */
 	protected ObjectPrinter<T> m_printer;
 	
+	/**
+	 * Whether the fields marked as <tt>transient</tt> should be ignored
+	 */
 	protected boolean m_ignoreTransient = true;
 	
-	public ReflectionPrintHandler(ObjectPrinter<T> s)
+	/**
+	 * Creates a new reflection print handler
+	 * @param p The internal object printer
+	 */
+	public ReflectionPrintHandler(ObjectPrinter<T> p)
 	{
 		super();
-		m_printer = s;
+		m_printer = p;
 	}
 	@Override
 	public boolean canHandle(Object o)
