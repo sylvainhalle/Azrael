@@ -234,6 +234,32 @@ The contents of `list2` recreate precisely the original objects with their
 *actual* (not declared) type. No custom code is needed (contrary to what
 Gson requires).
 
+Fridges
+-------
+
+Azrael also defines an interface called a `Fridge`, which is an 
+implementation of the [memento pattern](https://en.wikipedia.org/wiki/Memento_pattern).
+A fridge can be used to store an object (using a method called `store`),
+and retrieve this object at a later time (using a method called `fetch`).
+Exactly how and where this object is stored is transparent to the user.
+
+For example, a `FileFridge` serializes the object (using an arbitrary
+format) and saves it as a local text file. The fetch operation loads that
+file and deserializes its content to recreate the original object. Consider
+the following code:
+
+```java
+MyClass mc = ...
+XmlFileFridge fridge = new XmlFileFridge("/path/to/file.xml");
+fridge.store(mc);
+(... Some time later ...)
+MyClass mc_new = (MyClass) fridge.fetch();
+```
+
+The generic `Fridge` interface can be implemented for other purposes. For
+example, one could imagine a fridge that sends the object's contents to
+a remote server using an HTTP request, or that stores it into a database.
+
 Specifying class loaders
 ------------------------
 

@@ -25,7 +25,8 @@ import ca.uqac.lif.xml.XmlElement.XmlParseException;
 
 /**
  * Object reader that reads an XML <em>string</em> and recreates an object
- * from it.
+ * from it. It is a simple wrapper around {@link XmlReader} that parses
+ * an input string into an XML element.
  * @author Sylvain Hallé
  */
 public class XmlStringReader extends ObjectReader<String>
