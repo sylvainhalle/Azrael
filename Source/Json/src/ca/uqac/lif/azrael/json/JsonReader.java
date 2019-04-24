@@ -23,8 +23,15 @@ import ca.uqac.lif.azrael.ReadException;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonMap;
 
+/**
+ * Object reader that creates an object from a JSON element.
+ * @author Sylvain Hallé
+ */
 public class JsonReader extends ObjectReader<JsonElement>
 {
+	/**
+	 * Creates a new JSON reader
+	 */
 	public JsonReader()
 	{
 		super();
