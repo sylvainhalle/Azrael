@@ -34,18 +34,18 @@ public abstract class ObjectPrinter<T>
 	 * types
 	 */
 	protected List<PrintHandler<T>> m_handlers;
-	
+
 	/**
 	 * The default handler to use when no other handler accepts an object
 	 */
 	protected PrintHandler<T> m_reflectionHandler = new ReflectionPrintHandler<T>(this);
-	
+
 	/**
 	 * Whether to use the {@link Readable} interface when an object
 	 * implements it
 	 */
 	protected boolean m_usePrintable = true;
-	
+
 	/**
 	 * Creates a new object printer
 	 */
@@ -54,7 +54,7 @@ public abstract class ObjectPrinter<T>
 		super();
 		m_handlers = new ArrayList<PrintHandler<T>>();
 	}
-	
+
 	/**
 	 * Serializes the contents of an object. If the object implements the
 	 * {@link Printable} interface, it is serialized by calling its
@@ -85,7 +85,7 @@ public abstract class ObjectPrinter<T>
 		}
 		return m_reflectionHandler.handle(o);
 	}
-	
+
 	/**
 	 * Wraps an object into a structure that contains its type declaration
 	 * and its printed contents
@@ -95,7 +95,7 @@ public abstract class ObjectPrinter<T>
 	 * @throws PrintException Thrown if the print operation caused an error
 	 */
 	public abstract T wrap(Object o, T t) throws PrintException;
-	
+
 	/**
 	 * Resets the state of the printer
 	 */
@@ -110,7 +110,7 @@ public abstract class ObjectPrinter<T>
 			m_reflectionHandler.reset();
 		}
 	}
-	
+
 	/**
 	 * Tells whether the object printer uses the {@link Printable}
 	 * interface when an object implements it
@@ -119,5 +119,14 @@ public abstract class ObjectPrinter<T>
 	public boolean usesPrintable()
 	{
 		return m_usePrintable;
+	}
+
+	/**
+	 * Prints a version number
+	 * @return The number
+	 */
+	public static String getVersionString()
+	{
+		return "2.0";
 	}
 }

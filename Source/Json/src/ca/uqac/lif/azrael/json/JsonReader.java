@@ -41,6 +41,7 @@ public class JsonReader extends ObjectReader<JsonElement>
 		m_handlers.add(new NumberReadHandler(this));
 		m_handlers.add(new StringReadHandler(this));
 		m_handlers.add(new ListReadHandler(this));
+		m_handlers.add(new EnumReadHandler(this));
 		m_handlers.add(new QueueReadHandler(this));
 		m_handlers.add(new SetReadHandler(this));
 		m_handlers.add(new MapReadHandler(this));

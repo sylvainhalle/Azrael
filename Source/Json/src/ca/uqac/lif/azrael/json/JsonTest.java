@@ -120,6 +120,21 @@ public class JsonTest
 		assertEquals("bar", nco.m_objects.get(1).m_y);
 	}
 	
+	@Test
+	public void testEnum1() throws PrintException, ReadException
+	{
+		EnumObject eo = new EnumObject();
+		JsonPrinter printer = new JsonPrinter();
+		JsonElement je = printer.print(eo);
+		assertNotNull(je);
+		JsonReader reader = new JsonReader();
+		Object o = reader.read(je);
+		assertNotNull(o);
+		assertTrue(o instanceof EnumObject);
+		EnumObject nco = (EnumObject) o;
+		assertEquals(nco.me, EnumObject.MyEnum.FOO); 
+	}
+	
 	protected static class SimpleObject implements Printable, Readable
 	{
 		int m_x;
@@ -216,5 +231,12 @@ public class JsonTest
 		{
 			m_objects.add(o);
 		}
+	}
+	
+	protected static class EnumObject
+	{
+		public static enum MyEnum {FOO, BAR}
+		
+		public MyEnum me = MyEnum.FOO;
 	}
 }

@@ -111,7 +111,7 @@ public class ReflectionPrintHandler<T> implements PrintHandler<T>
 		while (it.hasNext())
 		{
 			Field f = it.next();
-			if (f.getName().startsWith("$") || f.getName().startsWith(("!")))
+			if (f.getClass().isEnum() || f.getName().startsWith("$") || f.getName().startsWith(("!")))
 			{
 				it.remove();
 			}

@@ -18,39 +18,25 @@
  */
 package ca.uqac.lif.azrael.json;
 
-import ca.uqac.lif.azrael.ObjectPrinter;
 import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.json.JsonElement;
-import ca.uqac.lif.json.JsonMap;
-import ca.uqac.lif.json.JsonString;
 
-public class JsonPrinter extends ObjectPrinter<JsonElement>
+public class EnumPrintHandler extends JsonPrintHandler
 {
-	public static final transient String CLASS_KEY = "!c";
-
-	public static final transient String CONTENT_KEY = "!t";
-
-	public JsonPrinter()
+	public EnumPrintHandler(JsonPrinter printer)
 	{
-		super();
-		m_handlers.add(new RawPrintHandler(this));
-		m_handlers.add(new NullPrintHandler(this));
-		m_handlers.add(new BooleanPrintHandler(this));
-		m_handlers.add(new NumberPrintHandler(this));
-		m_handlers.add(new StringPrintHandler(this));
-		m_handlers.add(new ListPrintHandler(this));
-		m_handlers.add(new QueuePrintHandler(this));
-		m_handlers.add(new SetPrintHandler(this));
-		m_handlers.add(new EnumPrintHandler(this));
-		m_handlers.add(new MapPrintHandler(this));
+		super(printer);
 	}
 
 	@Override
-	public JsonElement wrap(Object o, JsonElement t) throws PrintException
+	public boolean canHandle(Object o)
 	{
-		JsonMap map = new JsonMap();
-		map.put(CLASS_KEY, new JsonString(o.getClass().getName()));
-		map.put(CONTENT_KEY, t);
-		return map;
+		return o.getClass().isEnum();
+	}
+
+	@Override
+	public JsonElement handle(Object o) throws PrintException 
+	{
+		return m_printer.wrap(o, m_printer.print(o.toString()));
 	}
 }
