@@ -18,6 +18,8 @@
  */
 package ca.uqac.lif.azrael.size;
 
+import java.lang.reflect.Array;
+
 import ca.uqac.lif.azrael.PrintException;
 
 public class ArrayPrintHandler extends ReferencePrintHandler
@@ -30,16 +32,17 @@ public class ArrayPrintHandler extends ReferencePrintHandler
 	@Override
 	public boolean canHandle(Object o) 
 	{
-		return o.getClass().isArray();
+		return o != null && o.getClass().isArray();
 	}
 
 	@Override
 	public Number getSize(Object o) throws PrintException 
 	{
-		Object[] array = (Object[]) o;
+		int length = Array.getLength(o);
 		int size = 16;
-		for (Object elem : array)
+		for (int i = 0; i < length; i++)
 		{
+			Object elem = Array.get(o, i);
 			size += (Integer) m_printer.print(elem);
 			if (!SizePrinter.isPrimitive(elem))
 			{

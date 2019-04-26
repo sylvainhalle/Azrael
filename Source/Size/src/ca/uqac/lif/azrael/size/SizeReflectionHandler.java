@@ -18,6 +18,8 @@
  */
 package ca.uqac.lif.azrael.size;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
@@ -44,26 +46,46 @@ public class SizeReflectionHandler extends ReflectionPrintHandler<Number>
 			return 0;
 		}
 		m_seenObjects.put(o, 1);
-		return super.handle(o);
+		int size = 24; // Basic overhead of a Java object
+		for (Field field : getAllFields(o.getClass()))
+		{
+			// Is this field declared as transient?
+			if (m_ignoreTransient && Modifier.isTransient(field.getModifiers()))
+			{
+				// Yes: don't serialize this field
+				continue; 
+			}
+			field.setAccessible(true);
+			
+			try
+			{
+				Object f_v = field.get(o);
+				if (SizePrinter.isPrimitive(f_v))
+				{
+					size += (Integer) m_printer.print(f_v);
+				}
+				else
+				{
+					size += SizePrinter.OBJREF_SIZE;
+					size += (Integer) m_printer.print(f_v);
+				}
+			} 
+			catch (IllegalArgumentException e)
+			{
+				throw new PrintException(e);
+			} 
+			catch (IllegalAccessException e)
+			{
+				throw new PrintException(e);
+			}
+		}
+		return size;
 	}
 	
 	@Override
 	public Number encapsulateFields(Object o, Map<String,Object> contents) throws PrintException
 	{
-		int size = 24; // Basic overhead of a Java object
-		for (Object f_v : contents.values())
-		{
-			if (SizePrinter.isPrimitive(f_v))
-			{
-				size += (Integer) m_printer.print(f_v);
-			}
-			else
-			{
-				size += SizePrinter.OBJREF_SIZE;
-				size += (Integer) m_printer.print(f_v);
-			}
-		}
-		return size;
+		return 0;
 	}
 	
 	@Override

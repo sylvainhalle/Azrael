@@ -63,6 +63,14 @@ public class SizeTest
 		assertTrue(size3 - size2 < so_size);
 	}
 	
+	@Test
+	public void testArray1() throws PrintException
+	{
+		int[] arr = new int[] {1, 2, 3};
+		int so_size = (Integer) m_printer.print(arr);
+		assertTrue(so_size > 0);
+	}
+	
 	public static class SimpleObject
 	{
 		int m_x;
