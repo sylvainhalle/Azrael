@@ -39,18 +39,18 @@ public abstract class ObjectReader<T>
 	 * Additional class loaders
 	 */
 	protected Set<ClassLoader> m_classLoaders;
-	
+
 	/**
 	 * A list of objects that handle the printing of objects of various
 	 * types
 	 */
 	protected List<ReadHandler<T>> m_handlers;
-	
+
 	/**
 	 * The default handler to use when no other accepts an object
 	 */
 	protected ReadHandler<T> m_reflectionHandler = new ReflectionReadHandler<T>(this);
-	
+
 	/**
 	 * Creates a new object reader
 	 */
@@ -154,7 +154,7 @@ public abstract class ObjectReader<T>
 		}
 		return o;
 	}
-	
+
 	/**
 	 * Adds a new class loader used to create new class instances 
 	 * @param cl The class loader
@@ -214,27 +214,36 @@ public abstract class ObjectReader<T>
 	 */
 	public static void setField(Object o, String field_name, Object value) throws ReadException
 	{
-	  if (o == null)
-	  {
-	    return;
-	  }
-	  try
-    {
-      Field fld = ReflectionPrintHandler.getFromAllFields(field_name, o.getClass());
-      fld.setAccessible(true);
-      fld.set(o, value);
-    }
-    catch (NoSuchFieldException e)
-    {
-      throw new ReadException(e);
-    }
-    catch (IllegalArgumentException e)
-    {
-      throw new ReadException(e);
-    }
-    catch (IllegalAccessException e)
-    {
-      throw new ReadException(e);
-    }
+		if (o == null)
+		{
+			return;
+		}
+		try
+		{
+			Field fld = ReflectionPrintHandler.getFromAllFields(field_name, o.getClass());
+			fld.setAccessible(true);
+			fld.set(o, value);
+		}
+		catch (NoSuchFieldException e)
+		{
+			throw new ReadException(e);
+		}
+		catch (IllegalArgumentException e)
+		{
+			throw new ReadException(e);
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new ReadException(e);
+		}
+	}
+	
+	/**
+	 * Adds a handler to the reader
+	 * @param h The handler
+	 */
+	public void addHandler(ReadHandler<T> h)
+	{
+		m_handlers.add(h);
 	}
 }

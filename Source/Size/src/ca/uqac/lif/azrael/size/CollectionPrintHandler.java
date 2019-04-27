@@ -87,7 +87,7 @@ public class CollectionPrintHandler extends ReferencePrintHandler
 			}
 			return size;
 		}
-		if (o instanceof ArrayList || o instanceof ArrayDeque)
+		if (o instanceof ArrayList)
 		{
 			ArrayList<?> col = (ArrayList<?>) o;
 			int size = 48 + 4 * col.size();
@@ -97,7 +97,16 @@ public class CollectionPrintHandler extends ReferencePrintHandler
 			}
 			return size;
 		}
+		if (o instanceof ArrayDeque)
+		{
+			ArrayDeque<?> col = (ArrayDeque<?>) o;
+			int size = 48 + 4 * col.size();
+			for (Object elem : col)
+			{
+				size += (Integer) m_printer.print(elem);
+			}
+			return size;
+		}
 		return 0;
 	}
-
 }

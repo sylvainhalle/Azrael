@@ -39,12 +39,12 @@ public class ReflectionPrintHandler<T> implements PrintHandler<T>
 	 * The internal object printer
 	 */
 	protected ObjectPrinter<T> m_printer;
-	
+
 	/**
 	 * Whether the fields marked as <tt>transient</tt> should be ignored
 	 */
 	protected boolean m_ignoreTransient = true;
-	
+
 	/**
 	 * Creates a new reflection print handler
 	 * @param p The internal object printer
@@ -88,12 +88,12 @@ public class ReflectionPrintHandler<T> implements PrintHandler<T>
 		}
 		return encapsulateFields(o, contents);
 	}
-	
+
 	protected T encapsulateFields(Object o, Map<String,Object> contents) throws PrintException
 	{
 		return m_printer.wrap(o, m_printer.print(contents));
 	}
-	
+
 	protected static List<Field> getAllFields(List<Field> fields, Class<?> type)
 	{
 		fields.addAll(Arrays.asList(type.getDeclaredFields()));

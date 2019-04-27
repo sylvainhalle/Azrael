@@ -46,7 +46,7 @@ public class SizeReflectionHandler extends ReflectionPrintHandler<Number>
 			return 0;
 		}
 		m_seenObjects.put(o, 1);
-		int size = 24; // Basic overhead of a Java object
+		int size = SizePrinter.OBJECT_SHELL_SIZE; // Basic overhead of a Java object
 		for (Field field : getAllFields(o.getClass()))
 		{
 			// Is this field declared as transient?

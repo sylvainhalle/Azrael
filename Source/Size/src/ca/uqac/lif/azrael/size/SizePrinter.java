@@ -23,7 +23,7 @@ import ca.uqac.lif.azrael.PrintException;
 
 public class SizePrinter extends ObjectPrinter<Number>
 {
-	public static final int OBJECT_SHELL_SIZE   = 8;
+	public static final int OBJECT_SHELL_SIZE   = 24;
     public static final int OBJREF_SIZE         = 4;
     public static final int LONG_FIELD_SIZE     = 8;
     public static final int INT_FIELD_SIZE      = 4;
@@ -37,6 +37,7 @@ public class SizePrinter extends ObjectPrinter<Number>
 	public SizePrinter()
 	{
 		super();
+		m_handlers.add(new NullPrintHandler(this));
 		m_handlers.add(new NumberPrintHandler());
 		m_handlers.add(new StringPrintHandler(this));
 		m_handlers.add(new BooleanPrintHandler());

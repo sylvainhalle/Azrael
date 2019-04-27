@@ -129,4 +129,24 @@ public abstract class ObjectPrinter<T>
 	{
 		return "2.0";
 	}
+	
+	/**
+	 * Adds a handler to the printer
+	 * @param h The handler
+	 */
+	public void addHandler(PrintHandler<T> h)
+	{
+		m_handlers.add(h);
+	}
+	
+	/**
+	 * Sets whether the printer uses the {@link Printable} interface when an
+	 * object provides one.
+	 * @param b Set to <tt>true</tt> to use the interface, <tt>false</tt> to
+	 * override it
+	 */
+	public void setUsePrintable(boolean b)
+	{
+	  m_usePrintable = b;
+	}
 }

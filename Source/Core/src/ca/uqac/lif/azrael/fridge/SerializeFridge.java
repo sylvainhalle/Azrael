@@ -52,6 +52,7 @@ public abstract class SerializeFridge<T> implements Fridge
     {
       throw new FridgeException(e);
     }
+    m_printer.reset();
   }
   
   @Override
