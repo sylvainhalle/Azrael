@@ -37,6 +37,20 @@
     <ant dir="Xml" target="jar" />
   </target>
   
+  <target name="download-deps">
+    <ant dir="Core" target="download-deps" />
+    <ant dir="Json" target="download-deps" />
+    <ant dir="Size" target="download-deps" />
+    <ant dir="Xml" target="download-deps" />
+  </target>
+  
+  <target name="clean">
+    <ant dir="Core" target="clean" />
+    <ant dir="Json" target="clean" />
+    <ant dir="Size" target="clean" />
+    <ant dir="Xml" target="clean" />
+  </target>
+  
   <target name="javadoc">
     <mkdir dir="../docs/javadoc"/>
     <mkdir dir="../docs/javadoc/doc-files"/>
