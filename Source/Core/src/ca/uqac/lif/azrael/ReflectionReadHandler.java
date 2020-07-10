@@ -34,6 +34,13 @@ public class ReflectionReadHandler<T> implements ReadHandler<T>
 	 * The internal object reader
 	 */
 	protected ObjectReader<T> m_reader;
+	
+	/**
+	 * Whether the access checks should be ignored. This is due to the
+	 * fact that access methods can throw a <tt>InaccessibleObjectException</tt>
+	 * in Java 9 onwards.
+	 */
+	protected boolean m_ignoreAccessChecks = false;
 
 	/**
 	 * Creates a new reflection read handler
@@ -43,6 +50,29 @@ public class ReflectionReadHandler<T> implements ReadHandler<T>
 	{
 		super();
 		m_reader = reader;
+	}
+	
+	/**
+	 * Sets whether the access checks should be ignored. This is due to the
+	 * fact that access methods can throw a <tt>InaccessibleObjectException</tt>
+	 * in Java 9 onwards.
+	 * @param b <tt>true</tt> to ignore access checks, <tt>false</tt> otherwise
+	 * (default)
+	 */
+	public void ignoreAccessChecks(boolean b)
+	{
+		m_ignoreAccessChecks = b;
+	}
+	
+	/**
+	 * Determines whether the access checks are be ignored by this handler.
+	 * @return <tt>true</tt> if access checks are ignored, <tt>false</tt>
+	 * otherwise
+	 * @see ReflectionReadHandler#ignoreAccessChecks(boolean)
+	 */
+	public boolean ignoresAccessChecks()
+	{
+		return m_ignoreAccessChecks;
 	}
 
 	@Override

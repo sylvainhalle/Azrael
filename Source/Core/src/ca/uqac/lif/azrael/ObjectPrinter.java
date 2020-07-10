@@ -38,7 +38,7 @@ public abstract class ObjectPrinter<T>
 	/**
 	 * The default handler to use when no other handler accepts an object
 	 */
-	protected PrintHandler<T> m_reflectionHandler = new ReflectionPrintHandler<T>(this);
+	protected ReflectionPrintHandler<T> m_reflectionHandler = new ReflectionPrintHandler<T>(this);
 
 	/**
 	 * Whether to use the {@link Readable} interface when an object
@@ -53,6 +53,18 @@ public abstract class ObjectPrinter<T>
 	{
 		super();
 		m_handlers = new ArrayList<PrintHandler<T>>();
+	}
+	
+	/**
+	 * Sets whether the access checks should be ignored. This is due to the
+	 * fact that access methods can throw a <tt>InaccessibleObjectException</tt>
+	 * in Java 9 onwards.
+	 * @param b <tt>true</tt> to ignore access checks, <tt>false</tt> otherwise
+	 * (default)
+	 */
+	public void ignoreAccessChecks(boolean b)
+	{
+		m_reflectionHandler.ignoreAccessChecks(b);
 	}
 
 	/**

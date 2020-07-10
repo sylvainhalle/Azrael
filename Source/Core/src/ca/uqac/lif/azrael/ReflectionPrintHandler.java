@@ -44,6 +44,13 @@ public class ReflectionPrintHandler<T> implements PrintHandler<T>
 	 * Whether the fields marked as <tt>transient</tt> should be ignored
 	 */
 	protected boolean m_ignoreTransient = true;
+	
+	/**
+	 * Whether the access checks should be ignored. This is due to the
+	 * fact that access methods can throw a <tt>InaccessibleObjectException</tt>
+	 * in Java 9 onwards.
+	 */
+	protected boolean m_ignoreAccessChecks = false;
 
 	/**
 	 * Creates a new reflection print handler
@@ -54,6 +61,30 @@ public class ReflectionPrintHandler<T> implements PrintHandler<T>
 		super();
 		m_printer = p;
 	}
+	
+	/**
+	 * Sets whether the access checks should be ignored. This is due to the
+	 * fact that access methods can throw a <tt>InaccessibleObjectException</tt>
+	 * in Java 9 onwards.
+	 * @param b <tt>true</tt> to ignore access checks, <tt>false</tt> otherwise
+	 * (default)
+	 */
+	public void ignoreAccessChecks(boolean b)
+	{
+		m_ignoreAccessChecks = b;
+	}
+	
+	/**
+	 * Determines whether the access checks are be ignored by this handler.
+	 * @return <tt>true</tt> if access checks are ignored, <tt>false</tt>
+	 * otherwise
+	 * @see ReflectionPrintHandler#ignoreAccessChecks(boolean)
+	 */
+	public boolean ignoresAccessChecks()
+	{
+		return m_ignoreAccessChecks;
+	}
+	
 	@Override
 	public boolean canHandle(Object o)
 	{
@@ -72,7 +103,22 @@ public class ReflectionPrintHandler<T> implements PrintHandler<T>
 				// Yes: don't serialize this field
 				continue; 
 			}
-			field.setAccessible(true);
+			try
+			{
+				field.setAccessible(true);
+			}
+			catch (RuntimeException e)
+			{
+				// Must check exception by its name, as the actual class only exists in Java 9+
+				if (e.getClass().getSimpleName().contains("InaccessibleObjectException") && m_ignoreAccessChecks)
+				{
+					continue;
+				}
+				else
+				{
+					throw new PrintException(e);
+				}
+			}
 			try
 			{
 				contents.put(field.getName(), field.get(o));

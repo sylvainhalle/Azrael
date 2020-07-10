@@ -55,8 +55,22 @@ public class SizeReflectionHandler extends ReflectionPrintHandler<Number>
 				// Yes: don't serialize this field
 				continue; 
 			}
-			field.setAccessible(true);
-			
+			try
+			{
+				field.setAccessible(true);
+			}
+			catch (RuntimeException e)
+			{
+				// Must check exception by its name, as the actual class only exists in Java 9+
+				if (e.getClass().getSimpleName().contains("InaccessibleObjectException") && m_ignoreAccessChecks)
+				{
+					continue;
+				}
+				else
+				{
+					throw new PrintException(e);
+				}
+			}
 			try
 			{
 				Object f_v = field.get(o);

@@ -293,6 +293,36 @@ read handler also has a method called `canHandle`, and another called
 `read` which should should contain custom code that takes care of reading
 the content of that object.
 
+Disabling access checks
+-----------------------
+
+In version 9 of Java onwards, serialization using reflection can sometimes
+cause an exception that looks like this:
+
+```
+java.lang.reflect.InaccessibleObjectException: Unable to make field private
+static final jdk.internal.misc.Unsafe jdk.internal.misc.InnocuousThread.UNSAFE accessible:
+module java.base does not "opens jdk.internal.misc" to unnamed module @5cba847b
+...
+```
+
+As per this [StackOverflow answer](https://stackoverflow.com/a/56339895),
+this is caused by the fact that "one of the dependencies of your project is
+trying to access a JVM API which was moved to an internal Java module, and
+is no longer exposed". The workaround is to run the application with the
+following flag:
+
+```
+--add-opens jdk.management/xxx.xxx.xxx=ALL-UNNAMED
+```
+
+Where `xxx.xxx.xxx` is the name of the offending package in the exception's
+message (here "jdk.internal.misc").
+
+Another possibility is to make Azrael silently ignore these warnings. In
+order to do so, call `ignoreAccessChecks(true)` on an `ObjectPrinter` or
+an `ObjectReader`.
+
 Dependencies
 ------------
 

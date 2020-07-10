@@ -49,7 +49,7 @@ public abstract class ObjectReader<T>
 	/**
 	 * The default handler to use when no other accepts an object
 	 */
-	protected ReadHandler<T> m_reflectionHandler = new ReflectionReadHandler<T>(this);
+	protected ReflectionReadHandler<T> m_reflectionHandler = new ReflectionReadHandler<T>(this);
 
 	/**
 	 * Creates a new object reader
@@ -59,6 +59,18 @@ public abstract class ObjectReader<T>
 		super();
 		m_handlers = new ArrayList<ReadHandler<T>>();
 		m_classLoaders = new HashSet<ClassLoader>();
+	}
+	
+	/**
+	 * Sets whether the access checks should be ignored. This is due to the
+	 * fact that access methods can throw a <tt>InaccessibleObjectException</tt>
+	 * in Java 9 onwards.
+	 * @param b <tt>true</tt> to ignore access checks, <tt>false</tt> otherwise
+	 * (default)
+	 */
+	public void ignoreAccessChecks(boolean b)
+	{
+		m_reflectionHandler.ignoreAccessChecks(b);
 	}
 
 	/**
@@ -152,6 +164,18 @@ public abstract class ObjectReader<T>
 		{
 			throw new ReadException(ex);
 		}
+		catch (RuntimeException e)
+		{
+			// Must check exception by its name, as the actual class only exists in Java 9+
+			if (e.getClass().getSimpleName().contains("InaccessibleObjectException") && m_reflectionHandler.ignoresAccessChecks())
+			{
+				// Do nothing
+			}
+			else
+			{
+				throw new ReadException(e);
+			}
+		}
 		return o;
 	}
 
@@ -212,7 +236,7 @@ public abstract class ObjectReader<T>
 	 * @param value The value to set
 	 * @throws ReadException Thrown if the value cannot be assigned to this field
 	 */
-	public static void setField(Object o, String field_name, Object value) throws ReadException
+	public void setField(Object o, String field_name, Object value) throws ReadException
 	{
 		if (o == null)
 		{
@@ -235,6 +259,18 @@ public abstract class ObjectReader<T>
 		catch (IllegalAccessException e)
 		{
 			throw new ReadException(e);
+		}
+		catch (RuntimeException e)
+		{
+			// Must check exception by its name, as the actual class only exists in Java 9+
+			if (e.getClass().getSimpleName().contains("InaccessibleObjectException") && m_reflectionHandler.ignoresAccessChecks())
+			{
+				// Nothing to do
+			}
+			else
+			{
+				throw new ReadException(e);
+			}
 		}
 	}
 	
