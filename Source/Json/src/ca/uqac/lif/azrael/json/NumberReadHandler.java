@@ -21,6 +21,7 @@ package ca.uqac.lif.azrael.json;
 import ca.uqac.lif.azrael.ReadException;
 import ca.uqac.lif.json.JsonElement;
 import ca.uqac.lif.json.JsonNumber;
+import ca.uqac.lif.json.JsonString;
 
 public class NumberReadHandler extends JsonReadHandler
 {
@@ -33,6 +34,10 @@ public class NumberReadHandler extends JsonReadHandler
 	@Override
 	public boolean canHandle(JsonElement o) 
 	{
+		if (!(o instanceof JsonString))
+		{
+			return false;
+		}
 		return o instanceof JsonNumber;
 	}
 

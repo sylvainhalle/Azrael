@@ -19,7 +19,7 @@
 package ca.uqac.lif.azrael.json;
 
 import ca.uqac.lif.azrael.PrintException;
-import ca.uqac.lif.json.JsonNumber;
+import ca.uqac.lif.json.JsonString;
 
 public class NumberPrintHandler extends JsonPrintHandler
 {
@@ -35,10 +35,26 @@ public class NumberPrintHandler extends JsonPrintHandler
 	}
 
 	@Override
-	public JsonNumber handle(Object o) throws PrintException 
+	public JsonString handle(Object o) throws PrintException 
 	{
+		String suffix = "";
+		if (o instanceof Integer)
+		{
+			suffix = "I";
+		}
+		if (o instanceof Long)
+		{
+			suffix = "L";
+		}
+		if (o instanceof Float)
+		{
+			suffix = "F";
+		}
+		if (o instanceof Double)
+		{
+			suffix = "D";
+		}
 		Number n = (Number) o;
-		return new JsonNumber(n);
+		return new JsonString(n.toString() + suffix);
 	}
-
 }
