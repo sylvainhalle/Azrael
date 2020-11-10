@@ -334,10 +334,16 @@ This project is separated in two parts:
   project.
 - The other folders implement serialization in a variety of formats. For
   example, the `Json` folder provides a JSON serializer; the `Xml`
-  folder provides an XML serializer. These JARs
-  may themselves have dependencies; for example, the library
-  [json-lif](https://github.com/liflab/json-lif) should be in your
-  classpath to use JSON serialization.
+  folder provides an XML serializer.
+
+These JARs may themselves have dependencies.
+
+- JSON serialization requires that the library
+  [json-lif](https://github.com/liflab/json-lif) be in your
+  classpath.
+- XML serialization requires that the library
+  [xml-lif](https://github.com/liflab/xml-lif) be in your
+  classpath.
 
 Projects that use Azrael
 ------------------------
