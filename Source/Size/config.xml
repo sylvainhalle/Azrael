@@ -33,15 +33,17 @@
     <filename>../azrael-size.jar</filename>
     <basename>Azrael Size</basename>
   </jar>
-
   
   <!-- The project's main class -->
   <!-- <mainclass>my.package.MainClass</mainclass> -->
+  
+  <!-- The location of rt.jar -->
+  <rtlocation>../rt.jar</rtlocation>
 
   <srcdir>src</srcdir>
   <docdir>doc</docdir>
   <depdir>dep</depdir>
-  <libdir>lib</libdir>
+  <libdir>../lib</libdir>
   <bindir>bin</bindir>
   
   <test>
@@ -50,7 +52,7 @@
     <srcdir>src</srcdir>
     <docdir>doc</docdir>
     <depdir>dep</depdir>
-    <libdir>lib</libdir>
+    <libdir>../lib</libdir>
     <bindir>bin</bindir>
   </test>
   
