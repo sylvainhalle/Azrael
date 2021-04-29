@@ -236,6 +236,10 @@
       		<exclude name="**/*Test.java"/>
       	</fileset>
       </sourcefiles>
+      <classpath>
+        <fileset file="Json/dep/json-lif.jar"/>
+        <fileset file="Xml/dep/xml-lif.jar"/>
+      </classpath>
     </javadoc>
   </target>
   
