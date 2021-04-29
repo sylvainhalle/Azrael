@@ -1,6 +1,6 @@
 /*
     Azrael, a serializer for Java objects
-    Copyright (C) 2016-2019 Sylvain Hallé
+    Copyright (C) 2016-2021 Sylvain Hallé
     Laboratoire d'informatique formelle
     Université du Québec à Chicoutimi, Canada
 
@@ -20,12 +20,10 @@ package ca.uqac.lif.azrael.json;
 
 import ca.uqac.lif.azrael.ReadException;
 import ca.uqac.lif.json.JsonElement;
-import ca.uqac.lif.json.JsonNumber;
 import ca.uqac.lif.json.JsonString;
 
 public class NumberReadHandler extends JsonReadHandler
 {
-
 	public NumberReadHandler(JsonReader reader)
 	{
 		super(reader);
@@ -38,13 +36,36 @@ public class NumberReadHandler extends JsonReadHandler
 		{
 			return false;
 		}
-		return o instanceof JsonNumber;
+		return ((JsonString) o).stringValue().matches("[\\d]*\\.[\\d]+[FDIL]|[\\d]+[FDIL]");
 	}
 
 	@Override
 	public Number handle(JsonElement o) throws ReadException
 	{
-		return ((JsonNumber) o).numberValue();
+	  if (!(o instanceof JsonString))
+	  {
+	    throw new ReadException("Expected a JsonString, got a " + o.getClass().getSimpleName());
+	  }
+	  JsonString js = (JsonString) o;
+	  String beginning = js.stringValue().substring(0, js.stringValue().length() - 1);
+	  String type = js.stringValue().substring(js.stringValue().length() - 1);
+	  if (type.compareTo("L") == 0)
+	  {
+	    return Long.parseLong(beginning);
+	  }
+	  if (type.compareTo("I") == 0)
+    {
+      return Integer.parseInt(beginning);
+    }
+	  if (type.compareTo("F") == 0)
+    {
+      return Float.parseFloat(beginning);
+    }
+	  if (type.compareTo("D") == 0)
+    {
+      return Double.parseDouble(beginning);
+    }
+	  throw new ReadException("Invalid number type");
 	}
 
 }
