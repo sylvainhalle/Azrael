@@ -10,7 +10,7 @@ library for Java. It allows Java objects to be saved ("serialized") to
 some data format, and to be reconstructed ("deserialized") from that saved
 data at a later time.
 
-The formt to which objects are serialized is parameterizable. 
+The form to which objects are serialized is parameterizable. 
 By default, Azrael comes with a serializer for
 [JSON](https://en.wikipedia.org/wiki/JSON) and XML, but its
 API allows you to easily implement serialization to your own custom data
