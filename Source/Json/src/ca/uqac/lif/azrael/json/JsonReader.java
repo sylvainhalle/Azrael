@@ -1,6 +1,6 @@
 /*
     Azrael, a serializer for Java objects
-    Copyright (C) 2016-2019 Sylvain Hallé
+    Copyright (C) 2016-2022 Sylvain Hallé
     Laboratoire d'informatique formelle
     Université du Québec à Chicoutimi, Canada
 
@@ -45,10 +45,11 @@ public class JsonReader extends ObjectReader<JsonElement>
 		m_handlers.add(new QueueReadHandler(this));
 		m_handlers.add(new SetReadHandler(this));
 		m_handlers.add(new MapReadHandler(this));
+		m_handlers.add(new ByteArrayReadHandler(this));
 	}
-
+	
 	@Override
-	protected Class<?> unwrapType(Object t) throws ReadException
+	protected String getWrappedTypeName(Object t) throws ReadException
 	{
 		if (!(t instanceof JsonMap))
 		{
@@ -59,9 +60,15 @@ public class JsonReader extends ObjectReader<JsonElement>
 		{
 			throw new ReadException("Incompatible element to deserialize from");
 		}
+		return m.getString(JsonPrinter.CLASS_KEY);
+	}
+
+	@Override
+	protected Class<?> unwrapType(Object t) throws ReadException
+	{
 		try 
 		{
-			return Class.forName(m.getString(JsonPrinter.CLASS_KEY));
+			return Class.forName(getWrappedTypeName(t));
 		} 
 		catch (ClassNotFoundException e) 
 		{

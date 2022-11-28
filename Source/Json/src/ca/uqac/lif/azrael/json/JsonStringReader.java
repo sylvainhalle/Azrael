@@ -1,6 +1,6 @@
 /*
     Azrael, a serializer for Java objects
-    Copyright (C) 2016-2019 Sylvain Hallé
+    Copyright (C) 2016-2022 Sylvain Hallé
     Laboratoire d'informatique formelle
     Université du Québec à Chicoutimi, Canada
 
@@ -31,6 +31,19 @@ import ca.uqac.lif.json.JsonParser.JsonParseException;
  */
 public class JsonStringReader extends ObjectReader<String>
 {
+	/**
+	 * Reads an object from a JSON string using default settings.
+	 * @param s The JSON string to read from
+	 * @return The reconstructed object
+	 * @throws ReadException Thrown if the object cannot be read from a
+	 * JSON string
+	 */
+	public static Object fromJson(String s) throws ReadException
+	{
+		JsonStringReader jsr = new JsonStringReader();
+		return jsr.read(s);
+	}
+	
 	/**
 	 * The reader used to read the JSON element
 	 */
@@ -64,6 +77,12 @@ public class JsonStringReader extends ObjectReader<String>
 		{
 			throw new ReadException(e);
 		}
+	}
+	
+	@Override
+	protected String getWrappedTypeName(Object t) throws ReadException 
+	{
+		return m_reader.getWrappedTypeName(t);
 	}
 
 	@Override

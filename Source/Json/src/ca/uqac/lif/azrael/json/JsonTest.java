@@ -135,6 +135,20 @@ public class JsonTest
 		assertEquals(nco.me, EnumObject.MyEnum.FOO); 
 	}
 	
+	@Test
+	public void testByteArray1() throws PrintException, ReadException
+	{
+		JsonPrinter printer = new JsonPrinter();
+		JsonElement je = printer.print(new byte[] {0, 1, 2});
+		assertNotNull(je);
+		JsonReader reader = new JsonReader();
+		Object o = reader.read(je);
+		assertNotNull(o);
+		assertTrue(o instanceof byte[]);
+		byte[] nco = (byte[]) o;
+		assertEquals(3, nco.length); 
+	}
+	
 	protected static class SimpleObject implements Printable, Readable
 	{
 		int m_x;

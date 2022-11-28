@@ -105,6 +105,8 @@ public abstract class ObjectReader<T>
 		}
 		return m_reflectionHandler.handle((T) t);
 	}
+	
+	protected abstract String getWrappedTypeName(Object t) throws ReadException;
 
 	protected abstract Class<?> unwrapType(Object t) throws ReadException;
 

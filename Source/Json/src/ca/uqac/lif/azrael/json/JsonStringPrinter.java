@@ -1,6 +1,6 @@
 /*
     Azrael, a serializer for Java objects
-    Copyright (C) 2016-2019 Sylvain Hallé
+    Copyright (C) 2016-2022 Sylvain Hallé
     Laboratoire d'informatique formelle
     Université du Québec à Chicoutimi, Canada
 
@@ -28,6 +28,19 @@ import ca.uqac.lif.json.JsonElement;
  */
 public class JsonStringPrinter extends ObjectPrinter<String>
 {
+	/**
+	 * Prints an object into a JSON string using default settings.
+	 * @param o The object to print
+	 * @return The JSON string
+	 * @throws PrintException Thrown if the object cannot be converted to a
+	 * JSON string
+	 */
+	public static String toJson(Object o) throws PrintException
+	{
+		JsonStringPrinter jsp = new JsonStringPrinter();
+		return jsp.print(o);
+	}
+	
 	/**
 	 * The printer used to print objects to JSON
 	 */

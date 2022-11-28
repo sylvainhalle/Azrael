@@ -1,6 +1,6 @@
 /*
     Azrael, a serializer for Java objects
-    Copyright (C) 2016-2019 Sylvain Hallé
+    Copyright (C) 2016-2022 Sylvain Hallé
     Laboratoire d'informatique formelle
     Université du Québec à Chicoutimi, Canada
 
@@ -39,6 +39,12 @@ public class CloneReader extends ObjectReader<Object>
 		m_handlers.add(new QueueReadHandler(this));
 		m_handlers.add(new SetReadHandler(this));
 		m_handlers.add(new IdentityReadHandler());
+	}
+	
+	@Override
+	protected String getWrappedTypeName(Object t) throws ReadException 
+	{
+	  return ((WrappedObject) t).getInnerClass().getName();
 	}
 	
 	@Override

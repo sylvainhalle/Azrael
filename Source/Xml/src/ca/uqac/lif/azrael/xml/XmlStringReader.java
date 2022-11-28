@@ -1,6 +1,6 @@
 /*
     Azrael, a serializer for Java objects
-    Copyright (C) 2016-2019 Sylvain Hallé
+    Copyright (C) 2016-2022 Sylvain Hallé
     Laboratoire d'informatique formelle
     Université du Québec à Chicoutimi, Canada
 
@@ -58,6 +58,12 @@ public class XmlStringReader extends ObjectReader<String>
 		{
 			throw new ReadException(e);
 		}
+	}
+	
+	@Override
+	protected String getWrappedTypeName(Object t) throws ReadException 
+	{
+		return m_reader.getWrappedTypeName(t);
 	}
 
 	@Override

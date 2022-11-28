@@ -16,44 +16,49 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ca.uqac.lif.azrael.xml;
+package ca.uqac.lif.azrael.json;
 
-import ca.uqac.lif.azrael.ObjectReader;
+import java.util.Base64;
+
 import ca.uqac.lif.azrael.ReadException;
-import ca.uqac.lif.xml.XmlElement;
+import ca.uqac.lif.json.JsonElement;
+import ca.uqac.lif.json.JsonString;
 
-/**
- * Reads the contents of an object from an XML element.
- * @author Sylvain Hallé
- */
-public class XmlReader extends ObjectReader<XmlElement>
+public class ByteArrayReadHandler extends JsonReadHandler
 {
-	@Override
-	protected String getWrappedTypeName(Object t) throws ReadException
+	public ByteArrayReadHandler(JsonReader reader)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		super(reader);
 	}
 
 	@Override
-	protected Class<?> unwrapType(Object t) throws ReadException
+	public boolean canHandle(JsonElement o) 
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if (!m_reader.isWrapped(o))
+		{
+			return false;
+		}
+		String type_name;
+		try
+		{
+			type_name = m_reader.getWrappedTypeName(o);
+			return type_name.compareTo("[B") == 0;
+		} 
+		catch (ReadException e)
+		{
+			return false;
+		}
 	}
 
 	@Override
-	protected Object unwrapContents(Object t) throws ReadException 
+	public byte[] handle(JsonElement o) throws ReadException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Object unwrapped = m_reader.unwrapContents(o);
+		if (!(unwrapped instanceof JsonString))
+		{
+			throw new ReadException("Expected wrapped contents to be a string");
+		}
+		JsonString js = (JsonString) unwrapped;
+		return Base64.getDecoder().decode(js.stringValue());
 	}
-
-	@Override
-	protected boolean isWrapped(Object t) 
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 }

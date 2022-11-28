@@ -18,40 +18,30 @@
  */
 package ca.uqac.lif.azrael.json;
 
-import ca.uqac.lif.azrael.ObjectPrinter;
+import java.util.Base64;
+
 import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.json.JsonElement;
-import ca.uqac.lif.json.JsonMap;
 import ca.uqac.lif.json.JsonString;
 
-public class JsonPrinter extends ObjectPrinter<JsonElement>
+public class ByteArrayPrintHandler extends JsonPrintHandler
 {
-	public static final transient String CLASS_KEY = "!c";
-
-	public static final transient String CONTENT_KEY = "!t";
-
-	public JsonPrinter()
+	public ByteArrayPrintHandler(JsonPrinter printer)
 	{
-		super();
-		m_handlers.add(new RawPrintHandler(this));
-		m_handlers.add(new NullPrintHandler(this));
-		m_handlers.add(new BooleanPrintHandler(this));
-		m_handlers.add(new NumberPrintHandler(this));
-		m_handlers.add(new StringPrintHandler(this));
-		m_handlers.add(new ListPrintHandler(this));
-		m_handlers.add(new QueuePrintHandler(this));
-		m_handlers.add(new SetPrintHandler(this));
-		m_handlers.add(new EnumPrintHandler(this));
-		m_handlers.add(new MapPrintHandler(this));
-		m_handlers.add(new ByteArrayPrintHandler(this));
+		super(printer);
+	}
+	
+	@Override
+	public boolean canHandle(Object o) 
+	{
+		return o instanceof byte[];
 	}
 
 	@Override
-	public JsonElement wrap(Object o, JsonElement t) throws PrintException
+	public JsonElement handle(Object o) throws PrintException 
 	{
-		JsonMap map = new JsonMap();
-		map.put(CLASS_KEY, new JsonString(o.getClass().getName()));
-		map.put(CONTENT_KEY, t);
-		return map;
+		byte[] b = (byte[]) o;
+		JsonString s = new JsonString(Base64.getEncoder().encodeToString(b));
+		return m_printer.wrap(o, s);
 	}
 }
