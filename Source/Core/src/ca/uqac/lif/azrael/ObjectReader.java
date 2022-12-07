@@ -33,7 +33,7 @@ import java.util.Set;
  *
  * @param <T> The format to which the object has been written
  */
-public abstract class ObjectReader<T>
+public abstract class ObjectReader<T> implements AzraelReader<T>
 {
 	/**
 	 * Additional class loaders
@@ -74,12 +74,13 @@ public abstract class ObjectReader<T>
 	}
 
 	/**
-	 * Deserializes the content of an object
+	 * Deserializes the content of an object.
 	 * @param t The serialized contents of the object
 	 * @return The deserialized object
 	 * @throws ReadException Thrown if deserialization produced an error
 	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public Object read(Object t) throws ReadException
 	{
 		if (t != null && isWrapped(t))

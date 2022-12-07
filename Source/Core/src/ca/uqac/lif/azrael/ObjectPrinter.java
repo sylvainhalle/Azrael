@@ -27,7 +27,7 @@ import java.util.List;
  *
  * @param <T> The format used to print the object's contents
  */
-public abstract class ObjectPrinter<T>
+public abstract class ObjectPrinter<T> implements AzraelPrinter<T>
 {
 	/**
 	 * A list of objects that handle the printing of objects of various
@@ -80,6 +80,7 @@ public abstract class ObjectPrinter<T>
 	 * @throws PrintException Thrown if an error occurs during the
 	 * serialization
 	 */
+	@Override
 	public T print(Object o) throws PrintException
 	{
 		if (m_usePrintable && o instanceof Printable)

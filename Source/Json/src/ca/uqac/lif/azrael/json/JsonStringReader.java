@@ -65,12 +65,11 @@ public class JsonStringReader extends ObjectReader<String>
 	}
 	
 	@Override
-	public Object read(Object o) throws ReadException
+	public Object read(String o) throws ReadException
 	{
-		String s = (String) o;
 		try 
 		{
-			JsonElement e = m_parser.parse(s);
+			JsonElement e = m_parser.parse(o);
 			return m_reader.read(e);
 		}
 		catch (JsonParseException e) 

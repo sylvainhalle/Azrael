@@ -46,7 +46,7 @@ public class XmlStringReader extends ObjectReader<String>
 	}
 	
 	@Override
-	public Object read(Object o) throws ReadException
+	public Object read(String o) throws ReadException
 	{
 		String s = (String) o;
 		try 
