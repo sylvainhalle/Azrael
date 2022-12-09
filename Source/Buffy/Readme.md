@@ -65,6 +65,18 @@ BitSequence s2 = new BitSequence(as_bytes);
 Map<String,?> new_map = schema.read(s1);
 ```
 
+Bit sequences can be saved as byte arrays and then written in the usual way:
+
+```java
+ByteArrayOutputStream b1 = ...
+b1.write(s1.toByteArray());
+
+ByteArrayInputStream b2 = ...
+BitSequence seq = new BitSequence(b2.getBytes());
+```
+
+If a bit sequence does not correspond to a round number of bytes, it is padded with zeros when saving to a byte array (the only time any padding occurs in the system). However, the deserialization is robust to this padding.
+
 Schemas
 -------
 
@@ -97,7 +109,7 @@ The second instruction throws a `ReadException` saying "Not enough bits to read"
 
 ### `EnumSchema`
 
-It is possible to associate arbitrary Java objects 
+It is possible to serialize fixed Java objects by simply associating them with a short binary sequence. The `EnumSchema` acts as the bridge between an enumeration of objects and a binary representation.
 
 ```java
 List<Integer> my_list = Arrays.asList(3, 1, 4);
@@ -107,15 +119,138 @@ Object recovered = schema.read(s); // recovered == my_list
 schema.read(new BitSequence("11")); // Throws a ReadException
 ```
 
-The last line throws an exception, as the enumeration has only three associated objects (numbered 0-1-2), so no object corresponds to number 3 (11).
+In the code above, `EnumSchema` is given three objects (a string, a Boolean and a list), and will serialize each of them respectively as the numerical values 0, 1 and 2. The enum uses as few bits as possible for the number of values (here, two bits are sufficient). The last line throws an exception, as no object corresponds to number 3 (`11`).
+
+### `BlobSchema`
+
+The blob schema takes a sequence of bits and serializes it as is. It prepends to this sequence the length in bits, encoded as a 32-bit unsigned integer. Thus the largest blob that can be saved is exactly 512 megabytes.
+
+```java
+BitSequence s = BlobSchema.instance.print(new BitSequence("10110101011101"));
+```
+
+The blob schema can be used as a "catch-all" format to serialize objects that are not directly supported by Buffy.
 
 ### `StringSchema`
 
 The `StringSchema` serializes a string. It comes in three flavors depending on how the string is written.
 
-- `StringBlobSchema` takes a string and dumps it as a blob. The encoding of the string is irrelevant as it is printed as a byte array.
-- `SmallsciiSchema` uses a restricted character set made of lowercase letters, numbers and punctuation. Such strings can be printed using 6 bits per character, instead of 8 or 16 for other character sets.
+- `StringBlobSchema` takes a string and dumps it as a blob (see above). The encoding of the string is irrelevant as it is printed as a byte array.
+- `SmallsciiSchema` uses a restricted character set made of lowercase letters, numbers and punctuation. Such strings can be printed using 6 bits per character, instead of 8 or 16 for other character sets. These strings are terminated 
 - `HuffStringSchema` uses [Huffman coding](https://en.m.wikipedia.org/wiki/Huffman_coding) to encode a string of text, using a predetermined Huffman tree (which must be calculated beforehand).
 
+### `ListSchema`
+
+The `ListSchema` serializes a list. It is the first example of a *compound* schema: it is parameterized with the schema of the elements of the list.
+
+```java
+ListSchema schema = new ListSchema(IntSchema.uint4);
+BitSequence s = schema.print(Arrays.asList(3, 1, 4));
+```
+
+The serialization of this list produces the following binary string:
+
+<table border="1">
+<tr><td>0000000000000011</td><td>0011</td><td>0001</td><td>0100</td></tr>
+<tr><td>Length: 3</td><td>3</td><td>1</td><td>4</td></tr>
+</table>
+
+The length is encoded on 16 bits, meaning that a list can have at most 65,536 elements.
+
+The `NupleSchema` is a variant of a list where the length is known in advance. It spares the schema from writing this length, thus saving those 16 bits.
+
+### `FixedMap`
+
+The fixed map serializes an associative map whose set of keys is fixed and known in advance. This is one example where considerable space savings can be obtained, as only values need to be serialized.
+
+```java
+FixedMapSchema schema = new FixedMapSchema(
+  IntSchema.uint4, "foo", "bar", "baz");
+Map<String,Integer> my_map = new HashMap<>();
+my_map.put("foo", 3);
+my_map.put("bar", 6);
+BitSequence s = schema.print(my_map);
+```
+
+This produces a schema for a map with three keys, associated to values that are expected to be Boolean.
+
+The serialization of this map produces the following binary string:
+
+<table border="1">
+<tr><td>1</td><td>0110</td><td>0</td><td>1</td><td>0011</td></tr>
+<tr><td>bar is defined</td><td>bar = 6</td><td>baz is not defined</td><td>foo is defined</td><td>foo = 3</td></tr>
+</table>
+
+Note how only 11 bits are necessary to encode the map. Values are stored in sorted key order. Also note that a map can have undefined (i.e. null) values for some of its keys:
+
+```java
+Map<String,?> recovered = schema.read(s);
+boolean b = recovered.containsKey("baz"); // b == false
+```
+
+### `MarshalledSchema`
+
+There are situations where the object to serialize/deserialize is not of a fixed type, but may be chosen from a finite set of possible types. The `MarshalledSchema` can take care of this: it is given a list of possible schemas, and takes care of serializing an object by advertising (i.e. "marshalling") its type before serializing it.
+
+```java
+MarshalledSchema schema = new MarshalledSchema(
+  String.class, SmallsciiSchema.instance,
+  List.class, new ListSchema(IntSchema.uint4)
+);
+BitSequence s1 = schema.print(Arrays.asList(3, 1, 4));
+BitSequence s2 = schema.print("hello");
+```
+
+The bit sequence `s1` produced in the previous example is the following:
+
+<table border="1">
+<tr><td>0001</td><td>0000000000000011</td><td>0011</td><td>0001</td><td>0100</td></tr>
+<tr><td>Schema: 1</td><td>Length: 3</td><td>3</td><td>1</td><td>4</td></tr>
+</table>
+
+Note that the list is preceded by a sequence of 4 bits indicating the schema number (thus at most 16 different schemas can be provided). This information is used at deserialization to use the appropriate schema to recover the object.
+
+```java
+Object o1 = schema.read(s1); // o1 == [3, 1, 4]
+Object o2 = schema.read(s2); // o2 == "hello"
+```
+
+### Custom schemas
+
+One can also write custom schemas for arbitrary objects.
+
+```java
+class C {
+  int x = 0;
+  String y = "";
+  
+  public C(int x, String y) {
+    this.x = x;
+    this.y = y;
+  }
+  
+  static class CSchema implements Schema {
+  
+    public BitSequence print(Object o) throws PrintException {
+      BitSequence s = IntSchema.uint32.print(((MyClass) o).x);
+      s.addAll(SmallsciiSchema.instance.print(((MyClass) o).y));
+      return s;
+    }
+    
+    public C read(BitSequence s) throws ReadException {
+      int x = IntSchema.uint32.read(s);
+      String y = SmallsciiSchema.instance.read(s);
+      return new C(x, y);
+    }
+  }
+}
+```
+
+Once created, the schema can be used to write objects of class `C`:
+
+```java
+BitSequence s = C.CSchema.print(new C(3, "foo"));
+C c = C.CSchema.read(s);
+```
 
 <!-- :wrap=soft:mode=markdown: -->
