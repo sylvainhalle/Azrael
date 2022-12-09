@@ -20,9 +20,9 @@ The table shows how such a Java object (fundamentally a `Map`) could be saved in
 | Format                | Size (bits)   |
 | :-------------------- | ------------: |
 | ObjectOutputStream    |         4,296 |
-| Azrael JSON (gzipped) | 2,912 (1,416) |
+| Azrael JSON           |         2,912 |
 | bson4jackson          |         1,128 |
-| Plain JSON (gzipped)  |     888 (824) |
+| Plain JSON            |           888 |
 | CBOR                  |           584 |
 | Smile                 |           480 |
 | **Buffy**             |       **149** |
@@ -217,7 +217,7 @@ Object o2 = schema.read(s2); // o2 == "hello"
 
 ### Custom schemas
 
-One can also write custom schemas for arbitrary objects.
+One can also write custom schemas for arbitrary objects. It suffices to define a class that implements the `Schema` interface (i.e. methods `print` and `read`). This is typically done as a static inner class to the class to be serialized.
 
 ```java
 class C {
@@ -252,5 +252,28 @@ Once created, the schema can be used to write objects of class `C`:
 BitSequence s = C.CSchema.print(new C(3, "foo"));
 C c = C.CSchema.read(s);
 ```
+
+Compression
+-----------
+
+To assess how compact a Buffy structure is, we can run a small experiment which consists of serializing it, and then attempting to compress it using a classical utility, such as `gzip`. To this end, we generated a structure similar to the example at the very top of this page, where the key "c" in the map is associated to a list of 1,000 foo-bar-baz maps of randomly generated integers.
+
+
+| Format                | Size (bits)   | Compressed size (bits) | Saving   |
+| :-------------------- | ------------: | ---------------------: | -------: |
+| Smile                 |        64,400 |                 21,952 |    66.3% |
+| Buffy                 |         1,910 |                  1,888 |     0.3% |
+
+As one can see, gzip cannot compress the Buffy binary file any further, indicating it contains almost no redundancy. In contrast, the Smile file can still be reduced by almost two thirds. This is of course anecdotal evidence, as it depends on the structure and the data it contains, but it shows that the tricks used by Buffy can *sometimes* be as efficient as applying dictionary-based compression such as LZW. (But not always; for example, replacing random numbers by a repetitive pattern results in a file that can still be compressed by a large margin. However, the Buffy compressed file is still smaller than the Smile one.)
+
+Related Work
+------------
+
+Buffy can be seen as an improved and simplified successor to [BufferTannen](https://github.com/sylvainhalle/BufferTannen), another library with the same design goals.
+
+About the Author
+----------------
+
+Buffy is developed by Sylvain Hallé, Full Professor at [Université du Québec à Chicoutimi](https://www.uqac.ca/), Canada  and head of [LIF](https://liflab.ca/), the Laboratory of Formal Computer Science ("Laboratoire d'informatique formelle").
 
 <!-- :wrap=soft:mode=markdown: -->
