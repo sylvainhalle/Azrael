@@ -18,6 +18,8 @@
  */
 package ca.uqac.lif.azrael.buffy;
 
+import ca.uqac.lif.azrael.ReadException;
+
 public class BooleanSchema extends EnumSchema
 {
 	public static final BooleanSchema instance = new BooleanSchema();
@@ -25,6 +27,12 @@ public class BooleanSchema extends EnumSchema
 	protected BooleanSchema()
 	{
 		super(false, true);
+	}
+	
+	@Override
+	public Boolean read(BitSequence t) throws ReadException
+	{
+		return (Boolean) super.read(t);
 	}
 	
 	@Override

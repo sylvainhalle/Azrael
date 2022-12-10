@@ -45,7 +45,7 @@ public class FixedMapSchema implements Schema
 	{
 		this(value_type, Arrays.asList(keys));
 	}
-
+	
 	@Override
 	public String toString()
 	{

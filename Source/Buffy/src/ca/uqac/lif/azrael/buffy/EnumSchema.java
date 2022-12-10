@@ -57,11 +57,12 @@ public class EnumSchema implements Schema
 	@Override
 	public Object read(BitSequence t) throws ReadException
 	{
-		if (!m_fromBits.containsKey(t))
+		BitSequence k = t.truncatePrefix(m_intSchema.getWidth());
+		if (!m_fromBits.containsKey(k))
 		{
-			throw new ReadException("Id " + t + " is not part of the enum");
+			throw new ReadException("Id " + k + " is not part of the enum");
 		}
-		return m_fromBits.get(t);
+		return m_fromBits.get(k);
 	}
 
 	@Override

@@ -18,24 +18,27 @@
  */
 package ca.uqac.lif.azrael.buffy;
 
+import static org.junit.Assert.*;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.Test;
+
 import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.azrael.ReadException;
 
-public class StringBlobSchema extends StringSchema implements Schema
+public class SelfDescribedObjectTest
 {
-	public static final StringBlobSchema instance = new StringBlobSchema();
-
-	@Override
-	public BitSequence print(Object o) throws PrintException
+	@SuppressWarnings("unchecked")
+	@Test
+	public void test1() throws PrintException, ReadException
 	{
-		byte[] bytes = o.toString().getBytes();
-		return ByteArraySchema.instance.print(bytes);
-	}
-
-	@Override
-	public String read(BitSequence o) throws ReadException
-	{
-		byte[] bytes = ByteArraySchema.instance.read(o);
-		return new String(bytes);
+		ListSchema s1 = new ListSchema(StringBlobSchema.instance);
+		SelfDescribedObject sdo = new SelfDescribedObject(s1, Arrays.asList("foo", "bar", "baz"));
+		BitSequence seq = SelfDescribedObject.schema.print(sdo);
+		SelfDescribedObject recovered = SelfDescribedObject.schema.read(seq);
+		List<String> list = (List<String>) recovered.getObject();
+		assertEquals(3, list.size());
 	}
 }
