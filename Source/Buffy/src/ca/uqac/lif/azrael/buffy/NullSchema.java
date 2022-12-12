@@ -18,32 +18,45 @@
  */
 package ca.uqac.lif.azrael.buffy;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
 import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.azrael.ReadException;
-import ca.uqac.lif.azrael.buffy.BitSequence;
-import ca.uqac.lif.azrael.buffy.BlobSchema;
 
-public class BlobTest
+/**
+ * The schema that prints nothing and returns <tt>null</tt> when read.
+ * Not to be confused with the {@link NullableSchema}.
+ * 
+ * @author Sylvain Hallé
+ */
+public class NullSchema implements Schema
 {
-	@Test
-	public void testPrint1() throws PrintException
+	/**
+	 * A single publicly visible reference to the null schema.
+	 */
+	public static final NullSchema instance = new NullSchema();
+	
+	/**
+	 * Creates a new null schema.
+	 */
+	protected NullSchema()
 	{
-		BitSequence blob = new BitSequence("10101010");
-		BitSequence seq = BlobSchema.blob32.print(blob);
-		assertEquals(40, seq.size());
-		System.out.println(seq);
+		super();
 	}
 	
-	@Test
-	public void testRead1() throws ReadException
+	@Override
+	public Object read(BitSequence t) throws ReadException
 	{
-		BitSequence seq = new BitSequence("0000000000000000000000000000100010101010");
-		BitSequence blob = BlobSchema.blob32.read(seq);
-		assertEquals("10101010", blob.toString());
-		assertEquals(0, seq.size());
+		return null;
+	}
+
+	@Override
+	public BitSequence print(Object o) throws PrintException
+	{
+		return new BitSequence();
+	}
+	
+	@Override
+	public String toString()
+	{
+		return "N";
 	}
 }

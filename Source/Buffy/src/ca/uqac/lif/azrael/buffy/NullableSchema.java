@@ -19,22 +19,47 @@
 package ca.uqac.lif.azrael.buffy;
 
 /**
- * Exception thrown when manipulating a {@link BitSequence}.
- * 
+ * The schema for an object that can either take some value, or be null. In
+ * this case, the null value is represented by the single bit 0, while the
+ * non-null value is represented by the bit 1, followed by the serialization of
+ * the object itself. Not to be confused with the {@link NullSchema}.
+ *   
  * @author Sylvain Hallé
  */
-public class BitFormatException extends Exception
+public class NullableSchema extends VariantSchema
 {
-  /**
-   * Dummy UID.
-   */
-  private static final long serialVersionUID = 1L;
-  
-  /**
-   * Creates a new instance of the exception.
-   */
-  public BitFormatException()
-  {
-    super("Bit format exception");
-  }
+	public NullableSchema(Schema s)
+	{
+		super();
+		add(new NullSchemaEntry());
+		add(new NonNullSchemaEntry(s));
+	}
+	
+	protected static class NullSchemaEntry extends SchemaEntry
+	{
+		public NullSchemaEntry()
+		{
+			super(null, NullSchema.instance);
+		}
+		
+		@Override
+		public boolean matches(Object o)
+		{
+			return o == null;
+		}
+	}
+	
+	protected static class NonNullSchemaEntry extends SchemaEntry
+	{
+		public NonNullSchemaEntry(Schema s)
+		{
+			super(null, s);
+		}
+		
+		@Override
+		public boolean matches(Object o)
+		{
+			return o != null;
+		}
+	}
 }

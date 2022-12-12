@@ -20,10 +20,21 @@ package ca.uqac.lif.azrael.buffy;
 
 import ca.uqac.lif.azrael.ReadException;
 
+/**
+ * A schema encoding a single Boolean value.
+ * 
+ * @author Sylvain Hallé
+ */
 public class BooleanSchema extends EnumSchema
 {
-	public static final BooleanSchema instance = new BooleanSchema();
+	/**
+	 * A single publicly visible reference of this schema.
+	 */
+	/*@ non_null @*/ public static final BooleanSchema instance = new BooleanSchema();
 	
+	/**
+	 * Creates a new instance of this schema.
+	 */
 	protected BooleanSchema()
 	{
 		super(false, true);

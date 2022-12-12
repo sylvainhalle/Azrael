@@ -18,32 +18,44 @@
  */
 package ca.uqac.lif.azrael.buffy;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
+import java.util.List;
 
 import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.azrael.ReadException;
-import ca.uqac.lif.azrael.buffy.BitSequence;
-import ca.uqac.lif.azrael.buffy.BlobSchema;
 
-public class BlobTest
+public class NupleSchema extends ListSchema
 {
-	@Test
-	public void testPrint1() throws PrintException
+	/**
+	 * The size of the n-uple.
+	 */
+	protected final int m_size;
+	
+	public NupleSchema(Schema element_schema, int size)
 	{
-		BitSequence blob = new BitSequence("10101010");
-		BitSequence seq = BlobSchema.blob32.print(blob);
-		assertEquals(40, seq.size());
-		System.out.println(seq);
+		super(element_schema);
+		m_size = size;
 	}
 	
-	@Test
-	public void testRead1() throws ReadException
+	@Override
+	public List<?> read(BitSequence t) throws ReadException
 	{
-		BitSequence seq = new BitSequence("0000000000000000000000000000100010101010");
-		BitSequence blob = BlobSchema.blob32.read(seq);
-		assertEquals("10101010", blob.toString());
-		assertEquals(0, seq.size());
+		return read(t, m_size);
 	}
+	
+	@Override
+	public BitSequence print(Object o) throws PrintException
+	{
+		if (!(o instanceof List))
+		{
+			throw new PrintException("Expected a list");
+		}
+		List<?> list = (List<?>) o;
+		BitSequence out = new BitSequence();
+		for (Object e : list)
+		{
+			out.addAll(m_elementSchema.print(e));
+		}
+		return out;
+	}
+
 }

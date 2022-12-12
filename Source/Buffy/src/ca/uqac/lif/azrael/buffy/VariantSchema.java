@@ -24,24 +24,53 @@ import java.util.Map;
 import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.azrael.ReadException;
 
-public class MarshalledSchema implements Schema
+/**
+ * A schema that can encode a fixed set of possible objects.
+ * 
+ * @author Sylvain Hallé
+ */
+public class VariantSchema implements Schema
 {
+	/**
+	 * A map associating encoded bit sequences with schema entries.
+	 */
 	protected final Map<BitSequence,SchemaEntry> m_schemaMap;
-	
-	protected int m_idCounter = 1;
-	
+
+	/**
+	 * A counter specifying the number of schemas currently added to this
+	 * object.
+	 */
+	protected int m_idCounter = 0;
+
+	/**
+	 * The schema used to read/write the bit sequence corresponding to each
+	 * "choice".
+	 */
 	protected static final IntSchema s_int = IntSchema.int4;
-	
-	public MarshalledSchema()
+
+	/**
+	 * Creates a new empty variant schema.
+	 */
+	public VariantSchema()
 	{
 		super();
 		m_schemaMap = new HashMap<BitSequence,SchemaEntry>();
 	}
-	
-	public MarshalledSchema add(Class<?> c, Schema s)
+
+	public VariantSchema add(Class<?> c, Schema s)
+	{
+		return add(new SchemaEntry(c, s));
+	}
+
+	public VariantSchema add(BitSequence seq, Class<?> c, Schema s)
+	{
+		m_schemaMap.put(seq, new SchemaEntry(c, s));
+		return this;
+	}
+
+	protected VariantSchema add(SchemaEntry e)
 	{
 		int id = m_idCounter++;
-		SchemaEntry e = new SchemaEntry(c, s);
 		try
 		{
 			m_schemaMap.put(s_int.print(id), e);
@@ -53,7 +82,7 @@ public class MarshalledSchema implements Schema
 		}
 		return this;
 	}
-	
+
 	@Override
 	public Object read(BitSequence t) throws ReadException
 	{
@@ -82,25 +111,25 @@ public class MarshalledSchema implements Schema
 		}
 		throw new PrintException("No schema for class " + o.getClass().getName());
 	}
-	
+
 	protected static class SchemaEntry
 	{
 		protected final Class<?> m_class;
-		
+
 		protected final Schema m_schema;
-		
+
 		public SchemaEntry(Class<?> c, Schema s)
 		{
 			super();
 			m_class = c;
 			m_schema = s;
 		}
-		
+
 		public Schema getSchema()
 		{
 			return m_schema;
 		}
-		
+
 		public boolean matches(Object o)
 		{
 			if (o == null)

@@ -21,21 +21,35 @@ package ca.uqac.lif.azrael.buffy;
 import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.azrael.ReadException;
 
+/**
+ * Encodes a string directly as bytes.
+ * @author Sylvain Hallé
+ */
 public class StringBlobSchema extends StringSchema implements Schema
 {
-	public static final StringBlobSchema instance = new StringBlobSchema();
+	/**
+	 * A single publicly visible reference of this schema.
+	 */
+	/*@ non_null @*/ public static final StringBlobSchema instance = new StringBlobSchema();
 
 	@Override
 	public BitSequence print(Object o) throws PrintException
 	{
 		byte[] bytes = o.toString().getBytes();
-		return ByteArraySchema.instance.print(bytes);
+		try
+		{
+			return BlobSchema.blob16.print(new BitSequence(bytes));
+		}
+		catch (BitFormatException e)
+		{
+			throw new PrintException(e);
+		}
 	}
 
 	@Override
 	public String read(BitSequence o) throws ReadException
 	{
-		byte[] bytes = ByteArraySchema.instance.read(o);
+		byte[] bytes = BlobSchema.blob16.read(o).toByteArray();
 		return new String(bytes);
 	}
 }

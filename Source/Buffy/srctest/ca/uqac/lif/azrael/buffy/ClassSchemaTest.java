@@ -20,30 +20,35 @@ package ca.uqac.lif.azrael.buffy;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.junit.Test;
 
 import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.azrael.ReadException;
-import ca.uqac.lif.azrael.buffy.BitSequence;
-import ca.uqac.lif.azrael.buffy.BlobSchema;
 
-public class BlobTest
+/**
+ * Unit tests for {@link ClassSchema}.
+ */
+public class ClassSchemaTest
 {
 	@Test
-	public void testPrint1() throws PrintException
+	public void test1() throws PrintException, ReadException
 	{
-		BitSequence blob = new BitSequence("10101010");
-		BitSequence seq = BlobSchema.blob32.print(blob);
-		assertEquals(40, seq.size());
-		System.out.println(seq);
+		ClassSchema schema = new ClassSchema(String.class, Integer.class);
+		BitSequence bs = schema.print(String.class);
+		assertEquals(2, bs.size());
+		Class<?> c = (Class<?>) schema.read(bs);
+		assertEquals(String.class, c);
 	}
 	
 	@Test
-	public void testRead1() throws ReadException
+	public void test2() throws PrintException, ReadException
 	{
-		BitSequence seq = new BitSequence("0000000000000000000000000000100010101010");
-		BitSequence blob = BlobSchema.blob32.read(seq);
-		assertEquals("10101010", blob.toString());
-		assertEquals(0, seq.size());
+		ClassSchema schema = new ClassSchema(String.class, Integer.class);
+		BitSequence bs = schema.print(List.class);
+		assertEquals(129, bs.size()); // 0 + 16 bits + "java.util.List"
+		Class<?> c = (Class<?>) schema.read(bs);
+		assertEquals(List.class, c);
 	}
 }

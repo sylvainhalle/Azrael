@@ -18,39 +18,42 @@
  */
 package ca.uqac.lif.azrael.buffy;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.azrael.ReadException;
 
-public class ReflectiveSchema extends MarshalledSchema
+public class ReflectiveSchema extends VariantSchema
 {
 	public ReflectiveSchema()
 	{
 		super();
 		add(BooleanSchema.class, new BooleanReflectiveSchema());
+		add(IntSchema.class, new IntReflectiveSchema());
 		add(ByteArraySchema.class, new ByteArrayReflectiveSchema());
 		add(StringBlobSchema.class, new StringBlobReflectiveSchema());
 		add(SmallsciiSchema.class, new SmallsciiReflectiveSchema());
 		add(BlobSchema.class, new BlobReflectiveSchema());
 		add(ListSchema.class, new ListReflectiveSchema());
 		add(FixedMapSchema.class, new FixedMapReflectiveSchema());
-		add(MarshalledSchema.class, new MarshalledReflectiveSchema());
+		add(VariantSchema.class, new VariantReflectiveSchema());
 	}
-	
+
 	@Override
 	public Schema read(BitSequence t) throws ReadException
 	{
 		return (Schema) super.read(t);
 	}
-	
+
 	protected class ByteArrayReflectiveSchema implements Schema
 	{
 		protected ByteArrayReflectiveSchema()
 		{
 			super();
 		}
-		
+
 		@Override
 		public ByteArraySchema read(BitSequence t) throws ReadException
 		{
@@ -63,14 +66,14 @@ public class ReflectiveSchema extends MarshalledSchema
 			return new BitSequence();
 		}
 	}
-	
+
 	protected class ListReflectiveSchema implements Schema
 	{
 		protected ListReflectiveSchema()
 		{
 			super();
 		}
-		
+
 		@Override
 		public ListSchema read(BitSequence t) throws ReadException
 		{
@@ -86,19 +89,20 @@ public class ReflectiveSchema extends MarshalledSchema
 				throw new PrintException("Expected a ListSchema");
 			}
 			ListSchema s = (ListSchema) o;
-			return ReflectiveSchema.this.print(s.m_elementSchema);
+			BitSequence bs = ReflectiveSchema.this.print(s.m_elementSchema);
+			return bs;
 		}
 	}
-	
+
 	protected class FixedMapReflectiveSchema implements Schema
 	{
 		protected static final ListSchema s_listSchema = new ListSchema(StringBlobSchema.instance);
-		
+
 		protected FixedMapReflectiveSchema()
 		{
 			super();
 		}
-		
+
 		@SuppressWarnings("unchecked")
 		@Override
 		public FixedMapSchema read(BitSequence t) throws ReadException
@@ -116,53 +120,84 @@ public class ReflectiveSchema extends MarshalledSchema
 				throw new PrintException("Expected a FixedMapSchema");
 			}
 			FixedMapSchema s = (FixedMapSchema) o;
-			
 			BitSequence bs = s_listSchema.print(s.m_keys);
 			bs.addAll(ReflectiveSchema.this.print(s.m_valueType));
 			return bs;
 		}
 	}
-	
-	protected class MarshalledReflectiveSchema implements Schema
+
+	protected class VariantReflectiveSchema implements Schema
 	{
-		protected static final ListSchema s_listSchema = new ListSchema(StringBlobSchema.instance);
-		
-		protected MarshalledReflectiveSchema()
+		protected static final ListSchema s_classListSchema = new ListSchema(new ClassSchema(Boolean.class, Integer.class, String.class, List.class, Map.class));
+
+		protected static final ListSchema s_blobListSchema = new ListSchema(BlobSchema.blob32);
+
+		protected VariantReflectiveSchema()
 		{
 			super();
 		}
-		
+
 		@SuppressWarnings("unchecked")
 		@Override
-		public MarshalledSchema read(BitSequence t) throws ReadException
+		public VariantSchema read(BitSequence t) throws ReadException
 		{
-			List<String> keys = (List<String>) s_listSchema.read(t);
-			Schema value_type = ReflectiveSchema.this.read(t);
-			return new MarshalledSchema(value_type, keys);
+			List<Class<?>> class_names = (List<Class<?>>) s_classListSchema.read(t);
+			List<BitSequence> schemas = (List<BitSequence>) s_blobListSchema.read(t);
+			if (class_names.size() != schemas.size())
+			{
+				throw new ReadException("Lists do not have the same size");
+			}
+			VariantSchema ms = new VariantSchema();
+			for (int i = 0; i < class_names.size(); i++)
+			{
+				BitSequence b_id;
+				try
+				{
+					b_id = IntSchema.int4.print(i);
+				}
+				catch (PrintException e)
+				{
+					throw new ReadException(e);
+				}
+				Schema decoded_s = ReflectiveSchema.this.read(schemas.get(i));
+				Class<?> c = class_names.get(i);
+				ms.add(b_id, c, decoded_s);
+			}
+			return ms;
 		}
+
 
 		@Override
 		public BitSequence print(Object o) throws PrintException
 		{
-			if (!(o instanceof MarshalledSchema))
+			if (!(o instanceof VariantSchema))
 			{
-				throw new PrintException("Expected a MarshalledSchema");
+				throw new PrintException("Expected a VariantSchema");
 			}
-			MarshalledSchema s = (MarshalledSchema) o;
-			//s.
-			BitSequence bs = s_listSchema.print(s.m_keys);
-			bs.addAll(ReflectiveSchema.this.print(s.m_valueType));
+			VariantSchema s = (VariantSchema) o;
+			List<Class<?>> class_names = new ArrayList<Class<?>>();
+			List<BitSequence> schemas = new ArrayList<BitSequence>();
+			for (int id = 0; id < s.m_schemaMap.size(); id++)
+			{
+				BitSequence b_id = IntSchema.int4.print(id);
+				SchemaEntry entry = s.m_schemaMap.get(b_id);
+				class_names.add(entry.m_class);
+				schemas.add(ReflectiveSchema.this.print(entry.m_schema));
+			}
+			BitSequence bs = new BitSequence();
+			bs.addAll(s_classListSchema.print(class_names));
+			bs.addAll(s_blobListSchema.print(schemas));
 			return bs;
 		}
 	}
-	
+
 	protected class BooleanReflectiveSchema implements Schema
 	{
 		protected BooleanReflectiveSchema()
 		{
 			super();
 		}
-		
+
 		@Override
 		public BooleanSchema read(BitSequence t) throws ReadException
 		{
@@ -179,14 +214,14 @@ public class ReflectiveSchema extends MarshalledSchema
 			return new BitSequence();
 		}
 	}
-	
+
 	protected class StringBlobReflectiveSchema implements Schema
 	{
 		protected StringBlobReflectiveSchema()
 		{
 			super();
 		}
-		
+
 		@Override
 		public StringBlobSchema read(BitSequence t) throws ReadException
 		{
@@ -203,14 +238,14 @@ public class ReflectiveSchema extends MarshalledSchema
 			return new BitSequence();
 		}
 	}
-	
+
 	protected class SmallsciiReflectiveSchema implements Schema
 	{
 		protected SmallsciiReflectiveSchema()
 		{
 			super();
 		}
-		
+
 		@Override
 		public SmallsciiSchema read(BitSequence t) throws ReadException
 		{
@@ -227,18 +262,18 @@ public class ReflectiveSchema extends MarshalledSchema
 			return new BitSequence();
 		}
 	}
-	
+
 	protected class BlobReflectiveSchema implements Schema
 	{
 		protected BlobReflectiveSchema()
 		{
 			super();
 		}
-		
+
 		@Override
 		public BlobSchema read(BitSequence t) throws ReadException
 		{
-			return BlobSchema.instance;
+			return BlobSchema.blob32;
 		}
 
 		@Override
@@ -251,14 +286,14 @@ public class ReflectiveSchema extends MarshalledSchema
 			return new BitSequence();
 		}
 	}
-	
+
 	protected class IntReflectiveSchema implements Schema
 	{
 		protected IntReflectiveSchema()
 		{
 			super();
 		}
-		
+
 		@Override
 		public IntSchema read(BitSequence t) throws ReadException
 		{
@@ -280,19 +315,19 @@ public class ReflectiveSchema extends MarshalledSchema
 			return new BitSequence();
 		}
 	}
-	
+
 	public static class SelfDescribedSchema implements Schema
 	{
 		protected static final ReflectiveSchema s_reflectiveSchema = new ReflectiveSchema();
-		
+
 		protected final Schema m_schema;
-		
+
 		public SelfDescribedSchema(Schema s)
 		{
 			super();
 			m_schema = s;
 		}
-		
+
 		@Override
 		public Object read(BitSequence t) throws ReadException
 		{
@@ -307,6 +342,6 @@ public class ReflectiveSchema extends MarshalledSchema
 			s.addAll(m_schema.print(o));
 			return s;
 		}
-		
+
 	}
 }

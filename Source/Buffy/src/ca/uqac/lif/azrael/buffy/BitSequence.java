@@ -60,6 +60,12 @@ public class BitSequence extends Vector<Boolean>
 		this();
 		readFromBytes(array, length);
 	}
+	
+	public BitSequence(byte[] array) throws BitFormatException
+	{
+		this();
+		readFromBytes(array, array.length * 8);
+	}
 
 	/**
 	 * Reads an array of bytes. Since

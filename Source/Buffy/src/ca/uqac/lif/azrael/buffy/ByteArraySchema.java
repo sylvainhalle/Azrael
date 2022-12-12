@@ -34,7 +34,7 @@ public class ByteArraySchema implements Schema
 			try
 			{
 				BitSequence seq = new BitSequence(bytes, bytes.length * 8);
-				return BlobSchema.instance.print(seq);
+				return BlobSchema.blob32.print(seq);
 			}
 			catch (BitFormatException e)
 			{
@@ -47,7 +47,7 @@ public class ByteArraySchema implements Schema
 	@Override
 	public byte[] read(BitSequence o) throws ReadException
 	{
-		BitSequence seq = (BitSequence) BlobSchema.instance.read(o);
+		BitSequence seq = (BitSequence) BlobSchema.blob32.read(o);
 		return seq.toByteArray();
 	}
 }

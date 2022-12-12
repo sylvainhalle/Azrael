@@ -21,13 +21,40 @@ package ca.uqac.lif.azrael.buffy;
 import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.azrael.ReadException;
 
+/**
+ * A schema encoding a bit sequence of variable length. The schema encodes
+ * the sequence by first printing an unsigned integer specifying the
+ * length of the bit sequence (in number of bits), followed by the bit
+ * sequence itself. There are two variants of blobs: those using a 32-bit
+ * integer as the length (storing at most 512 megabytes), and those using
+ * 16-bit integers (storing at most 8 kilobytes).
+ * 
+ * @author Sylvain Hallé
+ */
 public class BlobSchema implements Schema
 {
-	public static final BlobSchema instance = new BlobSchema();
+	/**
+	 * A single publicly visible reference of the blob-32 schema.
+	 */
+	public static final BlobSchema blob32 = new BlobSchema(IntSchema.int32);
 	
-	protected BlobSchema()
+	/**
+	 * A single publicly visible reference of the blob-16 schema.
+	 */
+	public static final BlobSchema blob16 = new BlobSchema(IntSchema.int16);
+	
+	/**
+	 * The schema used to write the length of the blob.
+	 */
+	protected final IntSchema m_intSchema;
+	
+	/**
+	 * Creates a new instance of the schema.
+	 */
+	protected BlobSchema(IntSchema s)
 	{
 		super();
+		m_intSchema = s;
 	}
 	
 	@Override
@@ -38,7 +65,7 @@ public class BlobSchema implements Schema
 			throw new PrintException("Expected a BitSequence");
 		}
 		BitSequence seq = (BitSequence) o;
-		BitSequence out = IntSchema.int32.print(seq.size());
+		BitSequence out = m_intSchema.print(seq.size());
 		out.addAll(seq);
 		return out;
 	}
@@ -46,7 +73,7 @@ public class BlobSchema implements Schema
 	@Override
 	public BitSequence read(BitSequence s) throws ReadException
 	{
-		long length = IntSchema.int32.read(s).longValue();
+		long length = m_intSchema.read(s).longValue();
 		if (s.size() < length)
 		{
 			throw new ReadException("Not enough bits to read");

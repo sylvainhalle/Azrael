@@ -18,57 +18,64 @@
  */
 package ca.uqac.lif.azrael.buffy;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.azrael.ReadException;
 
-public class ListSchema implements Schema
+public class ClassSchema extends EnumSchema
 {
-	protected final Schema m_elementSchema;
+	/*@ non_null @*/ protected static final StringSchema s_stringSchema = StringBlobSchema.instance;
 	
-	public ListSchema(Schema element_schema)
+	public ClassSchema(Class<?> ... classes)
 	{
-		super();
-		m_elementSchema = element_schema;
+		super((Object[]) classes);
 	}
 	
 	@Override
-	public List<?> read(BitSequence t) throws ReadException
+	public Class<?> read(BitSequence t) throws ReadException
 	{
-		int size = IntSchema.int16.read(t).intValue();
-		if (t.size() < size)
+		BitSequence is_shortcut = t.truncatePrefix(1);
+		if (is_shortcut.get(0))
 		{
-			throw new ReadException("Not enough bits to read");
+			return (Class<?>) super.read(t);
 		}
-		return read(t, size);
-	}
-	
-	protected List<Object> read(BitSequence t, int size) throws ReadException
-	{
-		List<Object> list = new ArrayList<Object>(size);
-		for (int i = 0; i < size; i++)
+		else
 		{
-			Object o = m_elementSchema.read(t);
-			list.add(o);
+			String class_name = s_stringSchema.read(t);
+			try
+			{
+				return Class.forName(class_name);
+			}
+			catch (ClassNotFoundException e)
+			{
+				throw new ReadException(e);
+			}
 		}
-		return list;
 	}
 
 	@Override
 	public BitSequence print(Object o) throws PrintException
 	{
-		if (!(o instanceof List))
+		if (!(o instanceof Class))
 		{
-			throw new PrintException("Expected a list");
+			throw new PrintException("Expected a class");
 		}
-		List<?> list = (List<?>) o;
-		BitSequence out = IntSchema.int16.print(list.size());
-		for (Object e : list)
+		Class<?> c = (Class<?>) o;
+		BitSequence bs = new BitSequence();
+		for (Map.Entry<Object,BitSequence> e : m_toBits.entrySet())
 		{
-			out.addAll(m_elementSchema.print(e));
+			Class<?> target_c = (Class<?>) e.getKey();
+			if (target_c.isAssignableFrom(c))
+			{
+				bs.add(true);
+				bs.addAll(e.getValue());
+				return bs;
+			}
 		}
-		return out;
+		bs.add(false);
+		System.out.println(o);
+		bs.addAll(s_stringSchema.print(c.getName()));
+		return bs;
 	}
 }

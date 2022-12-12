@@ -28,14 +28,14 @@ import org.junit.Test;
 import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.azrael.ReadException;
 
-public class MarshalledTest
+public class VariantTest
 {
 	@Test
 	public void test1() throws PrintException, ReadException
 	{
 		Object recovered;
 		BitSequence seq;
-		MarshalledSchema ms = new MarshalledSchema();
+		VariantSchema ms = new VariantSchema();
 		ms.add(String.class, SmallsciiSchema.instance);
 		ms.add(Integer.class, IntSchema.int8);
 		seq = ms.print("foo bar baz");
@@ -49,13 +49,13 @@ public class MarshalledTest
 	{
 		Object recovered;
 		BitSequence seq;
-		MarshalledSchema ms = new MarshalledSchema();
+		VariantSchema ms = new VariantSchema();
 		ms.add(String.class, SmallsciiSchema.instance);
 		ms.add(Integer.class, IntSchema.int8);
 		seq = ms.print(42);
 		recovered = ms.read(seq);
 		assertTrue(recovered instanceof Number);
-		assertEquals(42, (Number) recovered);
+		assertEquals(42, ((Number) recovered).intValue());
 	}
 	
 	@Test
@@ -63,7 +63,7 @@ public class MarshalledTest
 	{
 		Object recovered;
 		BitSequence seq;
-		MarshalledSchema ms = new MarshalledSchema();
+		VariantSchema ms = new VariantSchema();
 		ms.add(FixedMapInt.class, FixedMapIntSchema.instance);
 		ms.add(FixedMapString.class, FixedMapStringSchema.instance);
 		FixedMapInt fmi = new FixedMapInt();
@@ -79,7 +79,7 @@ public class MarshalledTest
 	{
 		Object recovered;
 		BitSequence seq;
-		MarshalledSchema ms = new MarshalledSchema();
+		VariantSchema ms = new VariantSchema();
 		ms.add(FixedMapInt.class, FixedMapIntSchema.instance);
 		ms.add(FixedMapString.class, FixedMapStringSchema.instance);
 		FixedMapString fmi = new FixedMapString();
@@ -109,7 +109,7 @@ public class MarshalledTest
 				if (has_entry.get(0))
 				{
 					Object o = m_valueType.read(s);
-					map.put(k, (Integer) o);
+					map.put(k, ((Number) o).intValue());
 				}
 				else
 				{
