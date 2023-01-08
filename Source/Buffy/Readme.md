@@ -253,6 +253,16 @@ BitSequence s = C.CSchema.print(new C(3, "foo"));
 C c = C.CSchema.read(s);
 ```
 
+Serializing Schemas
+-------------------
+
+A `Schema` is like any other object, meaning that it, too, can be serialized. Buffy provides the `ReflectiveSchema`, which can convert the other schemas of the library to bit sequences. Thus:
+
+```java
+```
+
+An object that is paired with the schema used to recover it is called a `SelfDescribedObject`.
+
 Compression
 -----------
 
