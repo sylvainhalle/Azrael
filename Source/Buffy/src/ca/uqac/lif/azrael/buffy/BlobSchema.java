@@ -71,8 +71,13 @@ public class BlobSchema implements Schema
 	}
 
 	@Override
-	public BitSequence read(BitSequence s) throws ReadException
+	public BitSequence read(Object o) throws ReadException
 	{
+		if (!(o instanceof BitSequence))
+		{
+			throw new ReadException("Expected a bit sequence");
+		}
+		BitSequence s = (BitSequence) o;
 		long length = m_intSchema.read(s).longValue();
 		if (s.size() < length)
 		{

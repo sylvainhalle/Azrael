@@ -58,6 +58,11 @@
   <mkdir dir="${build.rootlibdir}"/>
   <mkdir dir="jars"/>
 
+  <!-- Download rt.jar in all folders -->
+  <target name="download-rt8">
+    <ant dir="Core" target="download-rt8" />
+  </target>
+
   <!-- Calls the "jar" task in each subfolder -->  
   <target name="jar" depends="init,prepare">
     <for param="subdir">

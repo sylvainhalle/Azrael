@@ -100,8 +100,9 @@ public class VariantTest
 		}
 		
 		@Override
-		public Map<String,?> read(BitSequence s) throws ReadException
+		public Map<String,?> read(Object ob) throws ReadException
 		{
+			BitSequence s = (BitSequence) ob;
 			FixedMapInt map = new FixedMapInt();
 			for (String k : m_keys)
 			{
@@ -130,8 +131,9 @@ public class VariantTest
 		}
 
 		@Override
-		public Map<String,?> read(BitSequence s) throws ReadException
+		public Map<String,?> read(Object ob) throws ReadException
 		{
+			BitSequence s = (BitSequence) ob;
 			FixedMapString map = new FixedMapString();
 			for (String k : m_keys)
 			{

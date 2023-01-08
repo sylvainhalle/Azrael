@@ -55,8 +55,13 @@ public class EnumSchema implements Schema
 	}
 	
 	@Override
-	public Object read(BitSequence t) throws ReadException
+	public Object read(Object o) throws ReadException
 	{
+		if (!(o instanceof BitSequence))
+		{
+			throw new ReadException("Expected a bit sequence");
+		}
+		BitSequence t = (BitSequence) o;
 		BitSequence k = t.truncatePrefix(m_intSchema.getWidth());
 		if (!m_fromBits.containsKey(k))
 		{

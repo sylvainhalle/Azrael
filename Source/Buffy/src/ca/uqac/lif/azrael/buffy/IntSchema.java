@@ -145,8 +145,13 @@ public class IntSchema implements Schema
 	}
 
 	@Override
-	public Number read(BitSequence bs) throws ReadException
+	public Number read(Object o) throws ReadException
 	{
+		if (!(o instanceof BitSequence))
+		{
+			throw new ReadException("Expected a bit sequence");
+		}
+		BitSequence bs = (BitSequence) o;
 		long i_value = 0;
 		if (m_numBits > bs.size())
 		{

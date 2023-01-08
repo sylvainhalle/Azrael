@@ -31,5 +31,5 @@ public abstract class StringSchema implements Schema
 	public abstract BitSequence print(Object o) throws PrintException;
 	
 	@Override
-	public abstract String read(BitSequence s) throws ReadException;
+	public abstract String read(Object s) throws ReadException;
 }

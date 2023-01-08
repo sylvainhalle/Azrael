@@ -35,8 +35,13 @@ public class ListSchema implements Schema
 	}
 	
 	@Override
-	public List<?> read(BitSequence t) throws ReadException
+	public List<?> read(Object o) throws ReadException
 	{
+		if (!(o instanceof BitSequence))
+		{
+			throw new ReadException("Expected a bit sequence");
+		}
+		BitSequence t = (BitSequence) o;
 		int size = IntSchema.int16.read(t).intValue();
 		if (t.size() < size)
 		{
@@ -45,13 +50,18 @@ public class ListSchema implements Schema
 		return read(t, size);
 	}
 	
-	protected List<Object> read(BitSequence t, int size) throws ReadException
+	protected List<Object> read(Object o, int size) throws ReadException
 	{
+		if (!(o instanceof BitSequence))
+		{
+			throw new ReadException("Expected a bit sequence");
+		}
+		BitSequence t = (BitSequence) o;
 		List<Object> list = new ArrayList<Object>(size);
 		for (int i = 0; i < size; i++)
 		{
-			Object o = m_elementSchema.read(t);
-			list.add(o);
+			Object o2 = m_elementSchema.read(t);
+			list.add(o2);
 		}
 		return list;
 	}

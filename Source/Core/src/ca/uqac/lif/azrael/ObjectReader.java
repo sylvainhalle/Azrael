@@ -79,7 +79,6 @@ public abstract class ObjectReader<T> implements AzraelReader<T>
 	 * @return The deserialized object
 	 * @throws ReadException Thrown if deserialization produced an error
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public Object read(Object t) throws ReadException
 	{

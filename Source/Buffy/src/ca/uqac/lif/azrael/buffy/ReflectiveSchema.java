@@ -42,7 +42,7 @@ public class ReflectiveSchema extends VariantSchema
 	}
 
 	@Override
-	public Schema read(BitSequence t) throws ReadException
+	public Schema read(Object t) throws ReadException
 	{
 		return (Schema) super.read(t);
 	}
@@ -55,7 +55,7 @@ public class ReflectiveSchema extends VariantSchema
 		}
 
 		@Override
-		public ByteArraySchema read(BitSequence t) throws ReadException
+		public ByteArraySchema read(Object o) throws ReadException
 		{
 			return ByteArraySchema.instance;
 		}
@@ -75,7 +75,7 @@ public class ReflectiveSchema extends VariantSchema
 		}
 
 		@Override
-		public ListSchema read(BitSequence t) throws ReadException
+		public ListSchema read(Object t) throws ReadException
 		{
 			Schema element_schema = ReflectiveSchema.this.read(t);
 			return new ListSchema(element_schema);
@@ -96,7 +96,7 @@ public class ReflectiveSchema extends VariantSchema
 
 	protected class FixedMapReflectiveSchema implements Schema
 	{
-		protected static final ListSchema s_listSchema = new ListSchema(StringBlobSchema.instance);
+		protected final ListSchema s_listSchema = new ListSchema(StringBlobSchema.instance);
 
 		protected FixedMapReflectiveSchema()
 		{
@@ -105,7 +105,7 @@ public class ReflectiveSchema extends VariantSchema
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public FixedMapSchema read(BitSequence t) throws ReadException
+		public FixedMapSchema read(Object t) throws ReadException
 		{
 			List<String> keys = (List<String>) s_listSchema.read(t);
 			Schema value_type = ReflectiveSchema.this.read(t);
@@ -128,9 +128,9 @@ public class ReflectiveSchema extends VariantSchema
 
 	protected class VariantReflectiveSchema implements Schema
 	{
-		protected static final ListSchema s_classListSchema = new ListSchema(new ClassSchema(Boolean.class, Integer.class, String.class, List.class, Map.class));
+		protected final ListSchema s_classListSchema = new ListSchema(new ClassSchema(Boolean.class, Integer.class, String.class, List.class, Map.class));
 
-		protected static final ListSchema s_blobListSchema = new ListSchema(BlobSchema.blob32);
+		protected final ListSchema s_blobListSchema = new ListSchema(BlobSchema.blob32);
 
 		protected VariantReflectiveSchema()
 		{
@@ -139,7 +139,7 @@ public class ReflectiveSchema extends VariantSchema
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public VariantSchema read(BitSequence t) throws ReadException
+		public VariantSchema read(Object t) throws ReadException
 		{
 			List<Class<?>> class_names = (List<Class<?>>) s_classListSchema.read(t);
 			List<BitSequence> schemas = (List<BitSequence>) s_blobListSchema.read(t);
@@ -199,7 +199,7 @@ public class ReflectiveSchema extends VariantSchema
 		}
 
 		@Override
-		public BooleanSchema read(BitSequence t) throws ReadException
+		public BooleanSchema read(Object t) throws ReadException
 		{
 			return BooleanSchema.instance;
 		}
@@ -223,7 +223,7 @@ public class ReflectiveSchema extends VariantSchema
 		}
 
 		@Override
-		public StringBlobSchema read(BitSequence t) throws ReadException
+		public StringBlobSchema read(Object t) throws ReadException
 		{
 			return StringBlobSchema.instance;
 		}
@@ -247,7 +247,7 @@ public class ReflectiveSchema extends VariantSchema
 		}
 
 		@Override
-		public SmallsciiSchema read(BitSequence t) throws ReadException
+		public SmallsciiSchema read(Object t) throws ReadException
 		{
 			return SmallsciiSchema.instance;
 		}
@@ -271,7 +271,7 @@ public class ReflectiveSchema extends VariantSchema
 		}
 
 		@Override
-		public BlobSchema read(BitSequence t) throws ReadException
+		public BlobSchema read(Object t) throws ReadException
 		{
 			return BlobSchema.blob32;
 		}
@@ -295,7 +295,7 @@ public class ReflectiveSchema extends VariantSchema
 		}
 
 		@Override
-		public IntSchema read(BitSequence t) throws ReadException
+		public IntSchema read(Object t) throws ReadException
 		{
 			boolean signed = BooleanSchema.instance.read(t);
 			int num_bits = IntSchema.int8.read(t).intValue();
@@ -329,7 +329,7 @@ public class ReflectiveSchema extends VariantSchema
 		}
 
 		@Override
-		public Object read(BitSequence t) throws ReadException
+		public Object read(Object t) throws ReadException
 		{
 			// TODO Auto-generated method stub
 			return null;

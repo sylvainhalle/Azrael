@@ -47,8 +47,13 @@ public class StringBlobSchema extends StringSchema implements Schema
 	}
 
 	@Override
-	public String read(BitSequence o) throws ReadException
+	public String read(Object ob) throws ReadException
 	{
+		if (!(ob instanceof BitSequence))
+		{
+			throw new ReadException("Expected a bit sequence");
+		}
+		BitSequence o = (BitSequence) ob;
 		byte[] bytes = BlobSchema.blob16.read(o).toByteArray();
 		return new String(bytes);
 	}

@@ -33,8 +33,13 @@ public class ClassSchema extends EnumSchema
 	}
 	
 	@Override
-	public Class<?> read(BitSequence t) throws ReadException
+	public Class<?> read(Object o) throws ReadException
 	{
+		if (!(o instanceof BitSequence))
+		{
+			throw new ReadException("Expected a bit sequence");
+		}
+		BitSequence t = (BitSequence) o;
 		BitSequence is_shortcut = t.truncatePrefix(1);
 		if (is_shortcut.get(0))
 		{

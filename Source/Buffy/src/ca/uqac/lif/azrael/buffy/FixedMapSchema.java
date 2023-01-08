@@ -103,16 +103,21 @@ public class FixedMapSchema implements Schema
 	}
 
 	@Override
-	public Map<String,?> read(BitSequence s) throws ReadException
+	public Map<String,?> read(Object o) throws ReadException
 	{
+		if (!(o instanceof BitSequence))
+		{
+			throw new ReadException("Expected a bit sequence");
+		}
+		BitSequence s = (BitSequence) o;
 		Map<String,Object> map = new HashMap<String,Object>();
 		for (String k : m_keys)
 		{
 			BitSequence has_entry = s.truncatePrefix(1);
 			if (has_entry.get(0))
 			{
-				Object o = m_valueType.read(s);
-				map.put(k, o);
+				Object o2 = m_valueType.read(s);
+				map.put(k, o2);
 			}
 			else
 			{

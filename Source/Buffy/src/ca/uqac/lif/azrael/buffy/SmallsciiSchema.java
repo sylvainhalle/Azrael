@@ -90,8 +90,13 @@ public class SmallsciiSchema extends StringSchema
 	}
 
 	@Override
-	public String read(BitSequence s) throws ReadException
+	public String read(Object o) throws ReadException
 	{
+		if (!(o instanceof BitSequence))
+		{
+			throw new ReadException("Expected a bit sequence");
+		}
+		BitSequence s = (BitSequence) o;
 		StringBuilder sb = new StringBuilder();
 		while (s.size() >= 6)
 		{

@@ -43,7 +43,7 @@ public class NullSchema implements Schema
 	}
 	
 	@Override
-	public Object read(BitSequence t) throws ReadException
+	public Object read(Object o) throws ReadException
 	{
 		return null;
 	}

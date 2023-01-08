@@ -37,9 +37,9 @@ public class NupleSchema extends ListSchema
 	}
 	
 	@Override
-	public List<?> read(BitSequence t) throws ReadException
+	public List<?> read(Object o) throws ReadException
 	{
-		return read(t, m_size);
+		return read(o, m_size);
 	}
 	
 	@Override

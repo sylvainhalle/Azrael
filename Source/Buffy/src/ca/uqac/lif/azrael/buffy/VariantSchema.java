@@ -84,8 +84,13 @@ public class VariantSchema implements Schema
 	}
 
 	@Override
-	public Object read(BitSequence t) throws ReadException
+	public Object read(Object o) throws ReadException
 	{
+		if (!(o instanceof BitSequence))
+		{
+			throw new ReadException("Expected a bit sequence");
+		}
+		BitSequence t = (BitSequence) o;
 		BitSequence b_id = t.truncatePrefix(s_int.getWidth());
 		if (!m_schemaMap.containsKey(b_id))
 		{

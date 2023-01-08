@@ -41,9 +41,9 @@ public class BooleanSchema extends EnumSchema
 	}
 	
 	@Override
-	public Boolean read(BitSequence t) throws ReadException
+	public Boolean read(Object o) throws ReadException
 	{
-		return (Boolean) super.read(t);
+		return (Boolean) super.read(o);
 	}
 	
 	@Override

@@ -45,9 +45,14 @@ public class ByteArraySchema implements Schema
 	}
 	
 	@Override
-	public byte[] read(BitSequence o) throws ReadException
+	public byte[] read(Object o) throws ReadException
 	{
-		BitSequence seq = (BitSequence) BlobSchema.blob32.read(o);
+		if (!(o instanceof BitSequence))
+		{
+			throw new ReadException("Expected a bit sequence");
+		}
+		BitSequence s = (BitSequence) o;
+		BitSequence seq = (BitSequence) BlobSchema.blob32.read(s);
 		return seq.toByteArray();
 	}
 }

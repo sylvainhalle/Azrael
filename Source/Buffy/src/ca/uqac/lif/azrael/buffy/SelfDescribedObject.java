@@ -51,11 +51,16 @@ public class SelfDescribedObject
 		protected static final ReflectiveSchema s_reflectiveSchema = new ReflectiveSchema();
 		
 		@Override
-		public SelfDescribedObject read(BitSequence t) throws ReadException
+		public SelfDescribedObject read(Object o) throws ReadException
 		{
+			if (!(o instanceof BitSequence))
+			{
+				throw new ReadException("Expected a bit sequence");
+			}
+			BitSequence t = (BitSequence) o;
 			Schema o_s = s_reflectiveSchema.read(t);
-			Object o = o_s.read(t);
-			return new SelfDescribedObject(o_s, o);
+			Object o2 = o_s.read(t);
+			return new SelfDescribedObject(o_s, o2);
 		}
 
 		@Override
