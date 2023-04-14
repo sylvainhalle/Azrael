@@ -20,12 +20,12 @@ package ca.uqac.lif.azrael.size;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.TreeMap;
 
 import ca.uqac.lif.azrael.PrintException;
 
@@ -39,7 +39,10 @@ public class CollectionPrintHandler extends ReferencePrintHandler
 	@Override
 	public boolean canHandle(Object o) 
 	{
-		return o instanceof Collection || o instanceof Map;
+		return o instanceof HashSet || o instanceof HashMap 
+				|| o instanceof TreeMap || o instanceof Hashtable 
+				|| o instanceof LinkedList || o instanceof ArrayList
+				|| o instanceof ArrayDeque;
 	}
 
 	@Override
@@ -58,6 +61,18 @@ public class CollectionPrintHandler extends ReferencePrintHandler
 		if (o instanceof HashMap)
 		{
 			HashMap<?,?> col = (HashMap<?,?>) o;
+			int size = 64 + 36 * col.size();
+			for (Map.Entry<?,?> entry : col.entrySet())
+			{
+				size += (Integer) m_printer.print(entry.getKey());
+				size += (Integer) m_printer.print(entry.getValue());
+			}
+			return size;
+		}
+		if (o instanceof TreeMap)
+		{
+			// NOTE: this estimation is copied from HashMap
+			TreeMap<?,?> col = (TreeMap<?,?>) o;
 			int size = 64 + 36 * col.size();
 			for (Map.Entry<?,?> entry : col.entrySet())
 			{
@@ -107,6 +122,6 @@ public class CollectionPrintHandler extends ReferencePrintHandler
 			}
 			return size;
 		}
-		return 0;
+		throw new PrintException("Unhandled collection " + o.getClass().getName());
 	}
 }
