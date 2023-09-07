@@ -1,6 +1,6 @@
 /*
     Azrael, a serializer for Java objects
-    Copyright (C) 2016-2022 Sylvain Hallé
+    Copyright (C) 2016-2023 Sylvain Hallé
     Laboratoire d'informatique formelle
     Université du Québec à Chicoutimi, Canada
 
@@ -110,6 +110,11 @@ public class IntSchema implements Schema
 	@Override
 	public BitSequence print(Object o) throws PrintException
 	{
+		if (m_numBits == 0)
+		{
+			// Don't print anything
+			return new BitSequence();
+		}
 		if (!(o instanceof Integer) && !(o instanceof Long))
 		{
 			throw new PrintException("Expected an Integer or a Long");
@@ -150,6 +155,11 @@ public class IntSchema implements Schema
 		if (!(o instanceof BitSequence))
 		{
 			throw new ReadException("Expected a bit sequence");
+		}
+		if (m_numBits == 0)
+		{
+			// Don't need to read anything
+			return 0;
 		}
 		BitSequence bs = (BitSequence) o;
 		long i_value = 0;
