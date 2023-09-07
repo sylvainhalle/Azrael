@@ -1,6 +1,6 @@
 /*
     Azrael, a serializer for Java objects
-    Copyright (C) 2016-2022 Sylvain Hallé
+    Copyright (C) 2016-2023 Sylvain Hallé
     Laboratoire d'informatique formelle
     Université du Québec à Chicoutimi, Canada
 
@@ -31,19 +31,39 @@ public class FixedMapSchema implements Schema
 {
 	/*@ non_null @*/ protected final List<String> m_keys;
 
-	/*@ non_null @*/ protected final Schema m_valueType;
-
-	public FixedMapSchema(/*@ non_null @*/ Schema value_type, /*@ non_null @*/ List<String> keys)
+	/*@ non_null @*/ protected final Map<String,Schema> m_valueTypes;
+	
+	public FixedMapSchema(/*@ non_null @*/ List<String> keys)
 	{
 		super();
 		m_keys = keys;
-		Collections.sort(m_keys);
-		m_valueType = value_type;
+		Collections.sort(keys);
+		m_valueTypes = new HashMap<String,Schema>(keys.size());
+	}
+	
+	public FixedMapSchema(/*@ non_null @*/ String ... keys)
+	{
+		this(Arrays.asList(keys));
+	}
+
+	public FixedMapSchema(/*@ non_null @*/ Schema value_type, /*@ non_null @*/ List<String> keys)
+	{
+		this(keys);
+		for (String k : keys)
+		{
+			m_valueTypes.put(k, value_type);
+		}
 	}
 
 	public FixedMapSchema(/*@ non_null @*/ Schema value_type, /*@ non_null @*/ String ... keys)
 	{
 		this(value_type, Arrays.asList(keys));
+	}
+	
+	public FixedMapSchema setSchema(String key, Schema value_type)
+	{
+		m_valueTypes.put(key, value_type);
+		return this;
 	}
 	
 	@Override
@@ -57,10 +77,14 @@ public class FixedMapSchema implements Schema
 			{
 				out.append(",");
 			}
-			out.append(m_keys.get(i));
+			String k = m_keys.get(i);
+			if (!m_valueTypes.containsKey(k))
+			{
+				out.append(k + "->?");
+			}
+			out.append(k + "->" + m_valueTypes.get(k).toString());
 		}
-		out.append("]->");
-		out.append(m_valueType.toString());
+		out.append("]");
 		out.append(")");
 		return out.toString();
 	}
@@ -96,7 +120,12 @@ public class FixedMapSchema implements Schema
 			else
 			{
 				s.add(true);
-				s.addAll(m_valueType.print(bo));
+				if (!m_valueTypes.containsKey(k))
+				{
+					throw new PrintException("No schema defined for key " + k);
+				}
+				Schema sch = m_valueTypes.get(k);
+				s.addAll(sch.print(bo));
 			}
 		}
 		return s;
@@ -116,7 +145,8 @@ public class FixedMapSchema implements Schema
 			BitSequence has_entry = s.truncatePrefix(1);
 			if (has_entry.get(0))
 			{
-				Object o2 = m_valueType.read(s);
+				Schema sch = m_valueTypes.get(k);
+				Object o2 = sch.read(s);
 				map.put(k, o2);
 			}
 			else

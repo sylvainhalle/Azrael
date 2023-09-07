@@ -109,7 +109,8 @@ public class VariantTest
 				BitSequence has_entry = s.truncatePrefix(1);
 				if (has_entry.get(0))
 				{
-					Object o = m_valueType.read(s);
+					Schema value_type = m_valueTypes.get(k);
+					Object o = value_type.read(s);
 					map.put(k, ((Number) o).intValue());
 				}
 				else
@@ -140,7 +141,8 @@ public class VariantTest
 				BitSequence has_entry = s.truncatePrefix(1);
 				if (has_entry.get(0))
 				{
-					Object o = m_valueType.read(s);
+					Schema value_type = m_valueTypes.get(k);
+					Object o = value_type.read(s);
 					map.put(k, (String) o);
 				}
 				else

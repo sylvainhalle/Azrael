@@ -121,7 +121,7 @@ public class ReflectiveSchema extends VariantSchema
 			}
 			FixedMapSchema s = (FixedMapSchema) o;
 			BitSequence bs = s_listSchema.print(s.m_keys);
-			bs.addAll(ReflectiveSchema.this.print(s.m_valueType));
+			bs.addAll(ReflectiveSchema.this.print(s.m_valueTypes));
 			return bs;
 		}
 	}
