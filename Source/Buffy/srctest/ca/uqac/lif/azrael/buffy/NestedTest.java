@@ -29,12 +29,6 @@ import org.junit.Test;
 
 import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.azrael.ReadException;
-import ca.uqac.lif.azrael.buffy.BitSequence;
-import ca.uqac.lif.azrael.buffy.ListSchema;
-import ca.uqac.lif.azrael.buffy.FixedMapSchema;
-import ca.uqac.lif.azrael.buffy.Schema;
-import ca.uqac.lif.azrael.buffy.SmallsciiSchema;
-
 public class NestedTest
 {
 	public static final Schema schema1 = new FixedMapSchema(new ListSchema(SmallsciiSchema.instance), "foo", "bar", "baz");

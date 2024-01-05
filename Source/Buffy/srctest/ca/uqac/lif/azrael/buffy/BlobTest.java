@@ -24,8 +24,6 @@ import org.junit.Test;
 
 import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.azrael.ReadException;
-import ca.uqac.lif.azrael.buffy.BitSequence;
-import ca.uqac.lif.azrael.buffy.BlobSchema;
 
 public class BlobTest
 {
