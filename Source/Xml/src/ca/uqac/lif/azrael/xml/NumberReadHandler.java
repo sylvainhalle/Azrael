@@ -1,6 +1,6 @@
 /*
     Azrael, a serializer for Java objects
-    Copyright (C) 2016-2021 Sylvain Hallé
+    Copyright (C) 2016-2025 Sylvain Hallé
     Laboratoire d'informatique formelle
     Université du Québec à Chicoutimi, Canada
 
@@ -16,39 +16,45 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ca.uqac.lif.azrael.json;
+package ca.uqac.lif.azrael.xml;
 
 import ca.uqac.lif.azrael.ReadException;
-import ca.uqac.lif.json.JsonElement;
-import ca.uqac.lif.json.JsonString;
+import ca.uqac.lif.xml.TextElement;
+import ca.uqac.lif.xml.XmlElement;
 
-public class NumberReadHandler extends JsonReadHandler
-{
-	public NumberReadHandler(JsonReader reader)
+/**
+ * Object reader that reads an XML <em>string</em> and recreates an object
+ * from it. It is a simple wrapper around {@link XmlReader} that parses
+ * an input string into an XML element.
+ * @author Sylvain Hallé
+ */
+public class NumberReadHandler extends XmlReadHandler
+{	
+	/**
+	 * Creates a new Xml string reader
+	 */
+	public NumberReadHandler(XmlReader reader)
 	{
 		super(reader);
 	}
 
 	@Override
-	public boolean canHandle(JsonElement o) 
+	public boolean canHandle(XmlElement o)
 	{
-		if (!(o instanceof JsonString))
-		{
-			return false;
-		}
-		return ((JsonString) o).stringValue().matches("[\\d]*\\.[\\d]+[FDIL]|[\\d]+[FDIL]");
+		return o.getName().compareTo(XmlPrinter.s_numberName) == 0;
 	}
 
 	@Override
-	public Number handle(JsonElement o) throws ReadException
+	public Number handle(XmlElement o) throws ReadException
 	{
-		if (!(o instanceof JsonString))
+		XmlElement child = o.getChildren().get(0);
+		if (!(child instanceof TextElement))
 		{
-			throw new ReadException("Expected a JsonString, got a " + o.getClass().getSimpleName());
+			throw new ReadException("Expected a text element");
 		}
-		JsonString js = (JsonString) o;
-		String beginning = js.stringValue().substring(0, js.stringValue().length() - 1);
-		String type = js.stringValue().substring(js.stringValue().length() - 1);
+		String s = ((TextElement) child).getText();
+		String beginning = s.substring(0, s.length() - 1);
+		String type = s.substring(s.length() - 1);
 		if (type.compareTo("L") == 0)
 		{
 			return Long.parseLong(beginning);
@@ -67,5 +73,4 @@ public class NumberReadHandler extends JsonReadHandler
 		}
 		throw new ReadException("Invalid number type");
 	}
-
 }

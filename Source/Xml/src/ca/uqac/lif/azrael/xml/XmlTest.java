@@ -1,6 +1,6 @@
 /*
     Azrael, a serializer for Java objects
-    Copyright (C) 2016-2019 Sylvain Hallé
+    Copyright (C) 2016-2025 Sylvain Hallé
     Laboratoire d'informatique formelle
     Université du Québec à Chicoutimi, Canada
 
@@ -34,7 +34,6 @@ import ca.uqac.lif.azrael.Printable;
 import ca.uqac.lif.azrael.ReadException;
 import ca.uqac.lif.azrael.Readable;
 import ca.uqac.lif.xml.XmlElement;
-import ca.uqac.lif.xml.TextElement;
 
 /**
  * Unit tests for XML serialization.
@@ -43,7 +42,7 @@ import ca.uqac.lif.xml.TextElement;
 public class XmlTest 
 {
 	@Test
-	public void testJson1() throws PrintException, ReadException
+	public void testXml1() throws PrintException, ReadException
 	{
 		SimpleObject mp = new SimpleObject(3, "abc");
 		XmlPrinter printer = new XmlPrinter();
@@ -59,7 +58,7 @@ public class XmlTest
 	}
 
 	@Test
-	public void testJson2() throws PrintException, ReadException
+	public void testXml2() throws PrintException, ReadException
 	{
 		ComplexObject co = new ComplexObject();
 		co.add(new SimpleObject(3, "foo"));
@@ -80,7 +79,7 @@ public class XmlTest
 	}
 
 	@Test
-	public void testJson4() throws PrintException, ReadException
+	public void testXml4() throws PrintException, ReadException
 	{
 		NonPrintableObject co = new NonPrintableObject();
 		co.add(new SimpleObject(3, "foo"));

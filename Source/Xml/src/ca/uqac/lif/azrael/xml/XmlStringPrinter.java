@@ -45,6 +45,10 @@ public class XmlStringPrinter extends ObjectPrinter<String>
 	@Override
 	public String print(Object o) throws PrintException
 	{
+		if (!(o instanceof String))
+		{
+			throw new PrintException("This printer can only print strings");
+		}
 		XmlElement je = m_printer.print(o);
 		return je.toString();
 	}

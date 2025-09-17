@@ -18,18 +18,27 @@
  */
 package ca.uqac.lif.azrael.xml;
 
+import java.util.List;
+
 import ca.uqac.lif.azrael.ReadException;
-import ca.uqac.lif.xml.TextElement;
 import ca.uqac.lif.xml.XmlElement;
 
-public class EnumReadHandler extends XmlReadHandler
-{
-
-	public EnumReadHandler(XmlReader reader)
+/**
+ * Object reader that reads an XML <em>string</em> and recreates an object
+ * from it. It is a simple wrapper around {@link XmlReader} that parses
+ * an input string into an XML element.
+ * @author Sylvain Hallé
+ */
+public class ListReadHandler extends XmlReadHandler
+{	
+	/**
+	 * Creates a new Xml string reader
+	 */
+	public ListReadHandler(XmlReader reader)
 	{
 		super(reader);
 	}
-
+	
 	@Override
 	public boolean canHandle(XmlElement o) throws ReadException
 	{
@@ -38,28 +47,21 @@ public class EnumReadHandler extends XmlReadHandler
 			return false;
 		}
 		Class<?> clazz = m_reader.unwrapType(o);
-		return clazz.isEnum();
-	}
-
-	@Override
-	public String handle(XmlElement o) throws ReadException
-	{
-		Class<?> clazz = m_reader.unwrapType(o);
-		if (!clazz.isEnum())
-		{
-			throw new ReadException("Class " + clazz.getName() + " is not an enum");
-		}
-		return getEnumName(o);
+		return List.class.isAssignableFrom(clazz);
 	}
 	
-	protected String getEnumName(XmlElement o) throws ReadException
+	@Override
+	public List<?> handle(XmlElement o) throws ReadException
 	{
-		XmlElement content = m_reader.unwrapContents(o);
-		if (content.getChildren().size() != 1 || !(content.getChildren().get(0) instanceof TextElement))
+		Class<?> clazz = m_reader.unwrapType(o);
+		XmlElement in_list = m_reader.unwrapContents(o);
+		@SuppressWarnings("unchecked")
+		List<Object> out_list = (List<Object>) m_reader.getInstance(clazz);
+		for (XmlElement child : in_list.getChildren())
 		{
-			throw new ReadException("Enum does not contain a single text node");
-		}
-		return ((TextElement) content.getChildren().get(0)).getText();
+			Object o_k = m_reader.read(child);
+			out_list.add(o_k);
+		}	
+		return out_list;
 	}
-
 }

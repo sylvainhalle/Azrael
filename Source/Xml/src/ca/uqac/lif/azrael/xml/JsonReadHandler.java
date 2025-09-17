@@ -1,6 +1,6 @@
 /*
     Azrael, a serializer for Java objects
-    Copyright (C) 2016-2019 Sylvain Hallé
+    Copyright (C) 2016-2025 Sylvain Hallé
     Laboratoire d'informatique formelle
     Université du Québec à Chicoutimi, Canada
 
@@ -18,50 +18,16 @@
  */
 package ca.uqac.lif.azrael.xml;
 
-import ca.uqac.lif.azrael.PrintException;
-import ca.uqac.lif.xml.TextElement;
+import ca.uqac.lif.azrael.ReadHandler;
 import ca.uqac.lif.xml.XmlElement;
 
-/**
- * Exports a number.
- * @author Sylvain Hallé
- */
-public class NumberPrintHandler extends XmlPrintHandler
+public abstract class JsonReadHandler implements ReadHandler<XmlElement>
 {
-	public NumberPrintHandler(XmlPrinter printer)
-	{
-		super(printer);
-	}
+	protected XmlReader m_reader;
 
-	@Override
-	public boolean canHandle(Object o) 
+	public JsonReadHandler(XmlReader reader)
 	{
-		return o instanceof Number;
-	}
-
-	@Override
-	public XmlElement handle(Object o) throws PrintException
-	{
-		String suffix = "";
-		if (o instanceof Integer)
-		{
-			suffix = "I";
-		}
-		if (o instanceof Long)
-		{
-			suffix = "L";
-		}
-		if (o instanceof Float)
-		{
-			suffix = "F";
-		}
-		if (o instanceof Double)
-		{
-			suffix = "D";
-		}
-		Number n = (Number) o;
-		XmlElement xe = new XmlElement(XmlPrinter.s_numberName);
-		xe.addChild(new TextElement(n.toString() + suffix));
-		return xe;
+		super();
+		m_reader = reader;
 	}
 }

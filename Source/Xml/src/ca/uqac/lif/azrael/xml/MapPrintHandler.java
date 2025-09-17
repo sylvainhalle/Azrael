@@ -51,7 +51,7 @@ public class MapPrintHandler extends XmlPrintHandler
 			XmlElement x_key = new XmlElement(XmlPrinter.s_keyKey);
 			x_key.addChild(m_printer.print(entry.getKey()));
 			XmlElement x_value = new XmlElement(XmlPrinter.s_valueKey);
-			x_value.addChild(m_printer.print(entry.getKey()));
+			x_value.addChild(m_printer.print(entry.getValue()));
 			x_entry.addChild(x_key);
 			x_entry.addChild(x_value);
 			x_map.addChild(x_entry);

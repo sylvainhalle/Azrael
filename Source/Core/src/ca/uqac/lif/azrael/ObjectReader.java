@@ -1,6 +1,6 @@
 /*
     Azrael, a serializer for Java objects
-    Copyright (C) 2016-2019 Sylvain Hallé
+    Copyright (C) 2016-2025 Sylvain Hallé
     Laboratoire d'informatique formelle
     Université du Québec à Chicoutimi, Canada
 
@@ -79,6 +79,7 @@ public abstract class ObjectReader<T> implements AzraelReader<T>
 	 * @return The deserialized object
 	 * @throws ReadException Thrown if deserialization produced an error
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object read(Object t) throws ReadException
 	{

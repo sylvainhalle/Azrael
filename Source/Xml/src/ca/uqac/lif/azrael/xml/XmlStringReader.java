@@ -24,20 +24,32 @@ import ca.uqac.lif.xml.XmlElement;
 import ca.uqac.lif.xml.XmlElement.XmlParseException;
 
 /**
- * Object reader that reads an XML <em>string</em> and recreates an object
- * from it. It is a simple wrapper around {@link XmlReader} that parses
- * an input string into an XML element.
+ * Object reader that reads a JSON <em>string</em> and recreates an object
+ * from it.
  * @author Sylvain Hallé
  */
 public class XmlStringReader extends ObjectReader<String>
 {
 	/**
-	 * The reader used to read the Xml element
+	 * Reads an object from an XML string using default settings.
+	 * @param s The XML string to read from
+	 * @return The reconstructed object
+	 * @throws ReadException Thrown if the object cannot be read from a
+	 * JSON string
+	 */
+	public static Object fromJson(String s) throws ReadException
+	{
+		XmlStringReader jsr = new XmlStringReader();
+		return jsr.read(s);
+	}
+	
+	/**
+	 * The reader used to read the XML element
 	 */
 	XmlReader m_reader;
 	
 	/**
-	 * Creates a new Xml string reader
+	 * Creates a new JSON string reader
 	 */
 	public XmlStringReader()
 	{
@@ -52,10 +64,9 @@ public class XmlStringReader extends ObjectReader<String>
 		{
 			throw new ReadException("Expected a string");
 		}
-		String s = (String) o;
 		try 
 		{
-			XmlElement e = XmlElement.parse(s);
+			XmlElement e = XmlElement.parse((String) o);
 			return m_reader.read(e);
 		}
 		catch (XmlParseException e) 

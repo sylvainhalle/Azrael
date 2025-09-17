@@ -1,6 +1,6 @@
 /*
     Azrael, a serializer for Java objects
-    Copyright (C) 2016-2025 Sylvain Hallé
+    Copyright (C) 2016-2023 Sylvain Hallé
     Laboratoire d'informatique formelle
     Université du Québec à Chicoutimi, Canada
 
@@ -22,44 +22,35 @@ import ca.uqac.lif.azrael.ReadException;
 import ca.uqac.lif.xml.TextElement;
 import ca.uqac.lif.xml.XmlElement;
 
-public class EnumReadHandler extends XmlReadHandler
-{
-
-	public EnumReadHandler(XmlReader reader)
+/**
+ * Object reader that reads an XML <em>string</em> and recreates an object
+ * from it. It is a simple wrapper around {@link XmlReader} that parses
+ * an input string into an XML element.
+ * @author Sylvain Hallé
+ */
+public class StringReadHandler extends XmlReadHandler
+{	
+	/**
+	 * Creates a new Xml string reader
+	 */
+	public StringReadHandler(XmlReader reader)
 	{
 		super(reader);
 	}
-
+	
 	@Override
-	public boolean canHandle(XmlElement o) throws ReadException
+	public boolean canHandle(XmlElement o)
 	{
-		if (!m_reader.isWrapped(o))
-		{
-			return false;
-		}
-		Class<?> clazz = m_reader.unwrapType(o);
-		return clazz.isEnum();
+		return o.getName().equals(XmlPrinter.s_stringName);
 	}
-
+	
 	@Override
 	public String handle(XmlElement o) throws ReadException
 	{
-		Class<?> clazz = m_reader.unwrapType(o);
-		if (!clazz.isEnum())
+		if (!o.getName().equals(XmlPrinter.s_stringName))
 		{
-			throw new ReadException("Class " + clazz.getName() + " is not an enum");
+			throw new ReadException("Expected a string");
 		}
-		return getEnumName(o);
+		return ((TextElement) o.getChildren().get(0)).getText();
 	}
-	
-	protected String getEnumName(XmlElement o) throws ReadException
-	{
-		XmlElement content = m_reader.unwrapContents(o);
-		if (content.getChildren().size() != 1 || !(content.getChildren().get(0) instanceof TextElement))
-		{
-			throw new ReadException("Enum does not contain a single text node");
-		}
-		return ((TextElement) content.getChildren().get(0)).getText();
-	}
-
 }
