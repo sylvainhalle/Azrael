@@ -41,7 +41,7 @@
   <!-- <mainclass>my.package.MainClass</mainclass> -->
   
   <!-- The target JDK version -->
-  <targetjdk>8</targetjdk>
+  <targetjdk>11</targetjdk>
 
   <srcdir>src</srcdir>
   <docdir>doc</docdir>
