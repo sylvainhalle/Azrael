@@ -1,6 +1,6 @@
 /*
     Azrael, a serializer for Java objects
-    Copyright (C) 2016-2023 Sylvain Hallé
+    Copyright (C) 2016-2025 Sylvain Hallé
     Laboratoire d'informatique formelle
     Université du Québec à Chicoutimi, Canada
 
@@ -51,6 +51,24 @@ public class StringReadHandler extends XmlReadHandler
 		{
 			throw new ReadException("Expected a string");
 		}
-		return ((TextElement) o.getChildren().get(0)).getText();
+		return unescape(((TextElement) o.getChildren().get(0)).getText());
+	}
+	
+	/**
+	 * Unescapes special characters in a string that was embedded in an XML
+	 * document.
+	 * 
+	 * @param s
+	 *          The string to unescape
+	 * @return The unescaped string
+	 */
+	protected static String unescape(String s)
+	{
+		s = s.replace("&lt;", "<");
+		s = s.replace("&gt;", ">");
+		s = s.replace("&quot;", "\"");
+		s = s.replace("&apos;", "'");
+		s = s.replace("&amp;", "&");
+		return s;
 	}
 }

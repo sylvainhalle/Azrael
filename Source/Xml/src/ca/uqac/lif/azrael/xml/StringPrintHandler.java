@@ -1,6 +1,6 @@
 /*
     Azrael, a serializer for Java objects
-    Copyright (C) 2016-2019 Sylvain Hallé
+    Copyright (C) 2016-2025 Sylvain Hallé
     Laboratoire d'informatique formelle
     Université du Québec à Chicoutimi, Canada
 
@@ -44,7 +44,25 @@ public class StringPrintHandler extends XmlPrintHandler
 	{
 		String s = (String) o;
 		XmlElement xe = new XmlElement(XmlPrinter.s_stringName);
-		xe.addChild(new TextElement(s));
+		xe.addChild(new TextElement(escape(s)));
 		return xe;
+	}
+	
+	/**
+	 * Escapes special characters in a string so that it can be safely embedded in
+	 * an XML document.
+	 * 
+	 * @param s
+	 *          The string to escape
+	 * @return The escaped string
+	 */
+	protected static String escape(String s)
+	{
+		s = s.replace("&", "&amp;");
+		s = s.replace("<", "&lt;");
+		s = s.replace(">", "&gt;");
+		s = s.replace("\"", "&quot;");
+		s = s.replace("'", "&apos;");
+		return s;
 	}
 }
